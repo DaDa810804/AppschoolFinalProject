@@ -9,6 +9,7 @@ target 'IosFinalProject' do
     pod 'IQKeyboardManagerSwift'
     pod 'TensorFlowLiteSwift'
     pod 'Charts'
+    pod 'iCarousel'
   # Pods for IosFinalProject
 
 end
