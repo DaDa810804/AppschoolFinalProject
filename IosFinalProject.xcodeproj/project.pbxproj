@@ -15,6 +15,10 @@
 		7217FAB82A4C1FB100A9DA85 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7217FAB72A4C1FB100A9DA85 /* Assets.xcassets */; };
 		7217FABB2A4C1FB100A9DA85 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7217FAB92A4C1FB100A9DA85 /* LaunchScreen.storyboard */; };
 		7217FAC62A4C360900A9DA85 /* APIManeger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7217FAC52A4C360900A9DA85 /* APIManeger.swift */; };
+		7217FACA2A4C64F500A9DA85 /* ImageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7217FAC92A4C64F500A9DA85 /* ImageTableViewCell.swift */; };
+		7217FACC2A4C650800A9DA85 /* ThirdTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7217FACB2A4C650800A9DA85 /* ThirdTableViewCell.swift */; };
+		7217FACE2A4C652000A9DA85 /* SecondTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7217FACD2A4C652000A9DA85 /* SecondTableViewCell.swift */; };
+		7217FAD82A4D1C4D00A9DA85 /* ImageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7217FAD72A4D1C4D00A9DA85 /* ImageCollectionViewCell.swift */; };
 		F199D88D1E52B1464654D778 /* Pods_IosFinalProject.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DFFEE8EDA57E97AC94CC2E3F /* Pods_IosFinalProject.framework */; };
 /* End PBXBuildFile section */
 
@@ -30,6 +34,10 @@
 		7217FABA2A4C1FB100A9DA85 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		7217FABC2A4C1FB100A9DA85 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7217FAC52A4C360900A9DA85 /* APIManeger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIManeger.swift; sourceTree = "<group>"; };
+		7217FAC92A4C64F500A9DA85 /* ImageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageTableViewCell.swift; sourceTree = "<group>"; };
+		7217FACB2A4C650800A9DA85 /* ThirdTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThirdTableViewCell.swift; sourceTree = "<group>"; };
+		7217FACD2A4C652000A9DA85 /* SecondTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondTableViewCell.swift; sourceTree = "<group>"; };
+		7217FAD72A4D1C4D00A9DA85 /* ImageCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageCollectionViewCell.swift; sourceTree = "<group>"; };
 		D639692146C337884630462B /* Pods-IosFinalProject.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IosFinalProject.debug.xcconfig"; path = "Target Support Files/Pods-IosFinalProject/Pods-IosFinalProject.debug.xcconfig"; sourceTree = "<group>"; };
 		DFFEE8EDA57E97AC94CC2E3F /* Pods_IosFinalProject.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_IosFinalProject.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -93,6 +101,10 @@
 				7217FABC2A4C1FB100A9DA85 /* Info.plist */,
 				7217FAB42A4C1FAF00A9DA85 /* IosFinalProject.xcdatamodeld */,
 				7217FAC52A4C360900A9DA85 /* APIManeger.swift */,
+				7217FAC92A4C64F500A9DA85 /* ImageTableViewCell.swift */,
+				7217FACD2A4C652000A9DA85 /* SecondTableViewCell.swift */,
+				7217FACB2A4C650800A9DA85 /* ThirdTableViewCell.swift */,
+				7217FAD72A4D1C4D00A9DA85 /* ImageCollectionViewCell.swift */,
 			);
 			path = IosFinalProject;
 			sourceTree = "<group>";
@@ -233,8 +245,12 @@
 				7217FAC62A4C360900A9DA85 /* APIManeger.swift in Sources */,
 				7217FAB62A4C1FAF00A9DA85 /* IosFinalProject.xcdatamodeld in Sources */,
 				7217FAB02A4C1FAF00A9DA85 /* ViewController.swift in Sources */,
+				7217FACE2A4C652000A9DA85 /* SecondTableViewCell.swift in Sources */,
+				7217FACA2A4C64F500A9DA85 /* ImageTableViewCell.swift in Sources */,
 				7217FAAC2A4C1FAF00A9DA85 /* AppDelegate.swift in Sources */,
+				7217FAD82A4D1C4D00A9DA85 /* ImageCollectionViewCell.swift in Sources */,
 				7217FAAE2A4C1FAF00A9DA85 /* SceneDelegate.swift in Sources */,
+				7217FACC2A4C650800A9DA85 /* ThirdTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
