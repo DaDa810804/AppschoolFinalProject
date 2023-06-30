@@ -8,6 +8,22 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
+        <!--某幣-->
+        <scene sceneID="Nzk-4n-RUe">
+            <objects>
+                <viewController storyboardIdentifier="ProductDetailViewController" id="EvM-xJ-Adw" customClass="ProductDetailViewController" customModule="IosFinalProject" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Z7y-fn-GR6">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="N3S-x0-v4w"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="某幣" id="BXw-82-fTV"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="tAQ-uQ-Em3" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-2086.2595419847326" y="2270.4225352112676"/>
+        </scene>
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
@@ -17,7 +33,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="cV1-35-U1n">
-                                <rect key="frame" x="0.0" y="103" width="393" height="666"/>
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="769"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <prototypes>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ImageTableViewCell" id="W8J-aB-P89" customClass="ImageTableViewCell" customModule="IosFinalProject" customModuleProvider="target">
@@ -52,7 +68,7 @@
                         <constraints>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="cV1-35-U1n" secondAttribute="trailing" id="LoW-Kw-FbI"/>
                             <constraint firstItem="cV1-35-U1n" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="Yzb-Op-sTy"/>
-                            <constraint firstItem="cV1-35-U1n" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" id="kBA-7H-y7J"/>
+                            <constraint firstItem="cV1-35-U1n" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="kBA-7H-y7J"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="cV1-35-U1n" secondAttribute="bottom" id="rD2-CM-W7K"/>
                         </constraints>
                     </view>
@@ -106,6 +122,7 @@
                 <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="4k6-qT-a7I" sceneMemberID="viewController">
                     <toolbarItems/>
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="us9-FX-xis">
+                        <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <color key="selectedImageTintColor" red="0.81568627449999997" green="0.30196078430000001" blue="0.2274509804" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -173,6 +190,24 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XYg-7c-MXU" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1253" y="746"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="JOt-TY-nmW">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="KGE-D6-wr0" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="wLl-Wf-qmp">
+                        <rect key="frame" x="0.0" y="59" width="393" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="EvM-xJ-Adw" kind="relationship" relationship="rootViewController" id="nJZ-0L-GBX"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="68E-4O-dag" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-2086.2595419847326" y="1529.5774647887324"/>
         </scene>
     </scenes>
     <resources>

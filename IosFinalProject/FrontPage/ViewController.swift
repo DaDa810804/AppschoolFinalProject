@@ -44,6 +44,15 @@ class ViewController: UIViewController {
         myTableView.delegate = self
         myTableView.dataSource = self
         moneyLabel.text = "NT$\(inputNumber!)"
+        myTableView.contentInsetAdjustmentBehavior = .never
+        ApiManager.shared.getAccounts{ aaaa in
+            var tttt = 0.0
+            for index in aaaa {
+                tttt += Double(index.balance)!
+            }
+            print("aaa\(tttt)")
+        }
+        //Account、Product、ProductStats
     }
     override func viewDidAppear(_ animated: Bool) {
         addOverlayView()
