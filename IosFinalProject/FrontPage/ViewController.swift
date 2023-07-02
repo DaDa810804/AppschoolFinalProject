@@ -8,9 +8,11 @@
 import UIKit
 //百分比上面的數字是low + high / 2
 class ViewController: UIViewController {
-    
+
     @IBOutlet weak var myTableView: UITableView!
-    var inputNumber: Int? = 1234
+    var isOverlayViewAdded = false
+    var producArray: [String] = []
+    var inputNumber: Int? = 0
     let totalLabel: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -41,30 +43,58 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        // 使用範例
+        ApiManager.shared.getOrder()
         myTableView.delegate = self
         myTableView.dataSource = self
         moneyLabel.text = "NT$\(inputNumber!)"
         myTableView.contentInsetAdjustmentBehavior = .never
-        ApiManager.shared.getProducts { aaa in
-            print("aaa\(aaa)")
-        }
+        addOverlayView()
         //Account、Product、ProductStats
     }
     
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.setNavigationBarHidden(true, animated: false)
+        ApiManager.shared.getProducts { products in
+            self.producArray = products
+            DispatchQueue.main.async {
+                self.myTableView.reloadData()
+            }
+        }
+        
+        ApiManager.shared.getAccounts { accounts in
+            guard let balance = self.getUSDBalance(accounts: accounts) else { return }
+            getExchangeRate() { (exchangeRate) in
+                if let exchangeRate = exchangeRate {
+                    let twdAmount = (Double(balance) ?? 0.0) * exchangeRate
+                    DispatchQueue.main.async {
+                        self.moneyLabel.text = "NT$ \(Int(twdAmount))"
+                        self.inputNumber = Int(twdAmount)
+                    }
+                    print("\(balance) USD = \(twdAmount) TWD")
+                } else {
+                    print("無法獲取匯率資料")
+                }
+            }
+        }
     }
     
     override func viewDidAppear(_ animated: Bool) {
         addOverlayView()
-        ApiManager.shared.getProductsStats(productId: "BTC-USD") { aaa in
-            print("aaa \(aaa)")
+    }
+    
+    func getUSDBalance(accounts: [Account]) -> String? {
+        for account in accounts {
+            if account.currency == "USD" {
+                return account.balance
+            }
         }
+        return nil
     }
     
     func addOverlayView() {
-        guard let cell = myTableView.cellForRow(at: IndexPath(row: 0, section: 0)) else { return }
-        
+        guard !isOverlayViewAdded, let cell = myTableView.cellForRow(at: IndexPath(row: 0, section: 0)) else { return }
+        isOverlayViewAdded = true
         let overlayView = UIView()
         overlayView.backgroundColor = UIColor.white.withAlphaComponent(1.0)
         overlayView.translatesAutoresizingMaskIntoConstraints = false
@@ -114,7 +144,7 @@ class ViewController: UIViewController {
 
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
+        return producArray.count + 2
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -127,16 +157,51 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             return cell!
         } else {
             let cell = myTableView.dequeueReusableCell(withIdentifier: "ThirdTableViewCell", for: indexPath) as? ThirdTableViewCell
-
+            let coinId = producArray[indexPath.row - 2]
+            ApiManager.shared.getProductsStats(productId: coinId) { productStat in
+                if let productStat = productStat {
+                    let open = productStat.open
+                    let last = productStat.last
+                    let number = (Double(last)! - Double(open)!) / Double(last)! * 100
+                    let formattedNumber = String(format: "%.2f", number)
+                    let productInfo = ProductInfo.fromTableStatName(coinId)
+                    DispatchQueue.main.async {
+                        cell?.leftImageView.image = productInfo?.image
+                        cell?.bottomLabel.text = productInfo?.chtName
+                        cell?.chartBottomLabel.text = "\(formattedNumber)%"
+                        let high = (Double(productStat.high)! + Double(productStat.low)!) / 2
+                        getExchangeRate() { (exchangeRate) in
+                            if let exchangeRate = exchangeRate {
+                                let twdAmount = high * exchangeRate
+                                DispatchQueue.main.async {
+                                    cell?.chartTopLabel.text = "\(Int(twdAmount))"
+                                }
+                                print("\(high) USD = \(twdAmount) TWD")
+                            } else {
+                                print("無法獲取匯率資料")
+                            }
+                        }
+                    }
+                }
+            }
+            let originalString = producArray[indexPath.row - 2]
+            let modifiedString = originalString.replacingOccurrences(of: "-USD", with: "")
+            cell?.topLabel.text = modifiedString
             return cell!
         }
 
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.row == 0 || indexPath.row == 1 {
+            // 取消點擊事件
+            tableView.deselectRow(at: indexPath, animated: false)
+            return
+        }
         let storyboard = UIStoryboard(name: "Main", bundle: nil) // 替换为您的故事板名称
         let destinationVC = storyboard.instantiateViewController(withIdentifier: "ProductDetailViewController") as? ProductDetailViewController
         destinationVC?.hidesBottomBarWhenPushed = true
+        destinationVC?.selectedCurrency = producArray[indexPath.row - 2]
         navigationController?.pushViewController(destinationVC!, animated: true)
     }
 }

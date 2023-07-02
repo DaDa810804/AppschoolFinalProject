@@ -53,3 +53,4 @@ struct Order: Codable {
     case fundingCurrency = "funding_currency"
   }
 }
+

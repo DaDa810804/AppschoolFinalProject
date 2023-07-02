@@ -10,6 +10,7 @@ import UIKit
 class ProductDetailViewController: UIViewController {
 
     @IBOutlet weak var productDetailTableView: UITableView!
+    var selectedCurrency: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,13 +19,21 @@ class ProductDetailViewController: UIViewController {
         self.navigationController?.setNavigationBarHidden(false, animated: false)
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        ApiManager.shared.getProductCandles(productId: selectedCurrency!)
+        guard let originalString = selectedCurrency else { return }
+        let modifiedString = originalString.replacingOccurrences(of: "-USD", with: "")
+        navigationItem.title = "\(ProductInfo.fromTableStatName(originalString)!.chtName)(\(modifiedString))"
+    }
+    
     @IBAction func buyButton(_ sender: UIButton) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil) // 替换为您的故事板名称
         let destinationVC = storyboard.instantiateViewController(withIdentifier: "TradePageViewController") as? TradePageViewController
         destinationVC?.hidesBottomBarWhenPushed = true
         destinationVC?.isBuying = true
         destinationVC?.modalPresentationStyle = .fullScreen
-        destinationVC?.selectedCurrency = "BTC" //之後是該頁面為何種幣別，再將其傳入
+        destinationVC?.selectedCurrency = selectedCurrency //之後是該頁面為何種幣別，再將其傳入
         present(destinationVC!, animated: true)
     }
     
@@ -34,7 +43,7 @@ class ProductDetailViewController: UIViewController {
         destinationVC?.hidesBottomBarWhenPushed = true
         destinationVC?.isBuying = false
         destinationVC?.modalPresentationStyle = .fullScreen
-        destinationVC?.selectedCurrency = "BTC" //之後是該頁面為何種幣別，再將其傳入
+        destinationVC?.selectedCurrency = selectedCurrency //之後是該頁面為何種幣別，再將其傳入
         present(destinationVC!, animated: true)
     }
 }
@@ -60,7 +69,6 @@ extension ProductDetailViewController: UITableViewDelegate, UITableViewDataSourc
                 
                 return cell
             }
-            
             return chartsCell
         } else if indexPath.row == 2 {
             guard let labelCell = productDetailTableView.dequeueReusableCell(withIdentifier: "LabelAndButtonTableViewCell", for: indexPath) as? LabelAndButtonTableViewCell else

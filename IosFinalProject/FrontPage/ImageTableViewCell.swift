@@ -11,7 +11,6 @@ class ImageTableViewCell: UITableViewCell {
 
     var imageArrayTest = ["image31","image32","image33","image34"]
     var pageControl: UIPageControl!
-    
     var icrview: iCarousel!
     
     

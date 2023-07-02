@@ -34,7 +34,9 @@
 		7217FB0E2A4F06AE00A9DA85 /* TradePageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7217FB0D2A4F06AE00A9DA85 /* TradePageViewController.swift */; };
 		7217FB102A5030AE00A9DA85 /* WebsocketService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7217FB0F2A5030AE00A9DA85 /* WebsocketService.swift */; };
 		7217FB122A50315700A9DA85 /* OrderModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7217FB112A50315700A9DA85 /* OrderModel.swift */; };
-		7217FB142A5038A900A9DA85 /* ChartViewTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7217FB132A5038A900A9DA85 /* ChartViewTableViewCell.swift */; };
+		7217FB162A513C5900A9DA85 /* AboutCharts.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7217FB152A513C5900A9DA85 /* AboutCharts.swift */; };
+		7217FB182A51543300A9DA85 /* USDToTWD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7217FB172A51543300A9DA85 /* USDToTWD.swift */; };
+		7217FB1A2A5193C300A9DA85 /* FucnAdd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7217FB192A5193C300A9DA85 /* FucnAdd.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -67,7 +69,9 @@
 		7217FB0D2A4F06AE00A9DA85 /* TradePageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TradePageViewController.swift; sourceTree = "<group>"; };
 		7217FB0F2A5030AE00A9DA85 /* WebsocketService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebsocketService.swift; sourceTree = "<group>"; };
 		7217FB112A50315700A9DA85 /* OrderModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderModel.swift; sourceTree = "<group>"; };
-		7217FB132A5038A900A9DA85 /* ChartViewTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChartViewTableViewCell.swift; sourceTree = "<group>"; };
+		7217FB152A513C5900A9DA85 /* AboutCharts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutCharts.swift; sourceTree = "<group>"; };
+		7217FB172A51543300A9DA85 /* USDToTWD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = USDToTWD.swift; sourceTree = "<group>"; };
+		7217FB192A5193C300A9DA85 /* FucnAdd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FucnAdd.swift; sourceTree = "<group>"; };
 		A13848BFD1B9375EB25A69F3 /* Pods_IosFinalProject.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_IosFinalProject.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0AB44074AEF887461B7D7A4 /* Pods-IosFinalProject.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IosFinalProject.debug.xcconfig"; path = "Target Support Files/Pods-IosFinalProject/Pods-IosFinalProject.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -127,7 +131,6 @@
 				7217FABC2A4C1FB100A9DA85 /* Info.plist */,
 				7217FAB42A4C1FAF00A9DA85 /* IosFinalProject.xcdatamodeld */,
 				7217FB0D2A4F06AE00A9DA85 /* TradePageViewController.swift */,
-				7217FB132A5038A900A9DA85 /* ChartViewTableViewCell.swift */,
 			);
 			path = IosFinalProject;
 			sourceTree = "<group>";
@@ -144,6 +147,7 @@
 				7217FB112A50315700A9DA85 /* OrderModel.swift */,
 				7217FAC52A4C360900A9DA85 /* APIManeger.swift */,
 				7217FB0F2A5030AE00A9DA85 /* WebsocketService.swift */,
+				7217FB172A51543300A9DA85 /* USDToTWD.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -182,6 +186,8 @@
 			isa = PBXGroup;
 			children = (
 				7217FB0B2A4EF91600A9DA85 /* Color.swift */,
+				7217FB152A513C5900A9DA85 /* AboutCharts.swift */,
+				7217FB192A5193C300A9DA85 /* FucnAdd.swift */,
 			);
 			path = extension;
 			sourceTree = "<group>";
@@ -330,6 +336,8 @@
 				7217FAC62A4C360900A9DA85 /* APIManeger.swift in Sources */,
 				7217FB102A5030AE00A9DA85 /* WebsocketService.swift in Sources */,
 				7217FB052A4EAAC300A9DA85 /* ChartsTableViewCell.swift in Sources */,
+				7217FB162A513C5900A9DA85 /* AboutCharts.swift in Sources */,
+				7217FB182A51543300A9DA85 /* USDToTWD.swift in Sources */,
 				7217FAF72A4DC55A00A9DA85 /* ProductsModel.swift in Sources */,
 				7217FB002A4E9E5000A9DA85 /* ProductDetailViewController.swift in Sources */,
 				7217FB072A4EAAD800A9DA85 /* TradeTableViewCell.swift in Sources */,
@@ -340,9 +348,9 @@
 				7217FACA2A4C64F500A9DA85 /* ImageTableViewCell.swift in Sources */,
 				7217FB122A50315700A9DA85 /* OrderModel.swift in Sources */,
 				7217FAF62A4DC55A00A9DA85 /* ProductStatsModel.swift in Sources */,
+				7217FB1A2A5193C300A9DA85 /* FucnAdd.swift in Sources */,
 				7217FB032A4EAAA500A9DA85 /* PriceTableViewCell.swift in Sources */,
 				7217FAF92A4DC55A00A9DA85 /* ProfileModel.swift in Sources */,
-				7217FB142A5038A900A9DA85 /* ChartViewTableViewCell.swift in Sources */,
 				7217FB0C2A4EF91600A9DA85 /* Color.swift in Sources */,
 				7217FAAC2A4C1FAF00A9DA85 /* AppDelegate.swift in Sources */,
 				7217FAF82A4DC55A00A9DA85 /* AccountModel.swift in Sources */,

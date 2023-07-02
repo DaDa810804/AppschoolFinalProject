@@ -63,7 +63,7 @@ class ThirdTableViewCell: UITableViewCell {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = .right
         label.font = UIFont.systemFont(ofSize: 14)
-        label.textColor = .green
+        label.textColor = .myGreen
         label.text = "+0.42%"
         // 设置折线图视图下方标签的样式、内容等
         // ...

@@ -14,7 +14,12 @@ import UIKit
 struct ProductStat: Codable {
   let open, high, low, last: String
   let volume, volume30Day: String?
-
+//    open: 代表過去 24 小時的開盤價格。
+//    high: 代表過去 24 小時的最高價格。
+//    low: 代表過去 24 小時的最低價格。
+//    last: 代表過去 24 小時的最新成交價格。
+//    volume: 代表過去 24 小時的交易量。
+//    volume30Day: 代表過去 30 天的交易量。
   enum CodingKeys: String, CodingKey {
     case high, low, last, volume, open
     case volume30Day = "volume_30day"
