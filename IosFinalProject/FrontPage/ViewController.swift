@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+//百分比上面的數字是low + high / 2
 class ViewController: UIViewController {
     
     @IBOutlet weak var myTableView: UITableView!
@@ -45,17 +45,21 @@ class ViewController: UIViewController {
         myTableView.dataSource = self
         moneyLabel.text = "NT$\(inputNumber!)"
         myTableView.contentInsetAdjustmentBehavior = .never
-        ApiManager.shared.getAccounts{ aaaa in
-            var tttt = 0.0
-            for index in aaaa {
-                tttt += Double(index.balance)!
-            }
-            print("aaa\(tttt)")
+        ApiManager.shared.getProducts { aaa in
+            print("aaa\(aaa)")
         }
         //Account、Product、ProductStats
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        self.navigationController?.setNavigationBarHidden(true, animated: false)
+    }
+    
     override func viewDidAppear(_ animated: Bool) {
         addOverlayView()
+        ApiManager.shared.getProductsStats(productId: "BTC-USD") { aaa in
+            print("aaa \(aaa)")
+        }
     }
     
     func addOverlayView() {
@@ -127,6 +131,13 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             return cell!
         }
 
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil) // 替换为您的故事板名称
+        let destinationVC = storyboard.instantiateViewController(withIdentifier: "ProductDetailViewController") as? ProductDetailViewController
+        destinationVC?.hidesBottomBarWhenPushed = true
+        navigationController?.pushViewController(destinationVC!, animated: true)
     }
 }
 

@@ -164,7 +164,7 @@ class ThirdTableViewCell: UITableViewCell {
         dataSet.drawCirclesEnabled = false
         dataSet.drawValuesEnabled = false
         dataSet.lineWidth = 2.0
-        dataSet.colors = [UIColor.green]
+        dataSet.colors = [UIColor.myGreen]
         let data = LineChartData (dataSet: dataSet)
         chartView.data = data
     }

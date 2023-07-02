@@ -14,7 +14,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        if #available(iOS 15.0, *){
+            let appearance = UINavigationBarAppearance()
+            let fontSize: CGFloat = 18.0
+            let font = UIFont.systemFont(ofSize: fontSize)
+            appearance.configureWithOpaqueBackground()
+            appearance.backgroundColor = UIColor.myRed.withAlphaComponent(0.9)
+            appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
+            
+            appearance.titlePositionAdjustment = UIOffset(horizontal: -70, vertical: 0) // 将标题文字向左偏移
+
+            UINavigationBar.appearance().tintColor = .white
+            UINavigationBar.appearance().standardAppearance = appearance
+            UINavigationBar.appearance().scrollEdgeAppearance = UINavigationBar.appearance().standardAppearance
+        } else {
+            UINavigationBar.appearance().barTintColor = UIColor(red: 0.0/255.0, green: 125/255.0, blue: 0.0/255.0, alpha: 1.0)
+            UINavigationBar.appearance().titleTextAttributes = [NSAttributedString.Key.foregroundColor: UIColor.white]
+            UINavigationBar.appearance().tintColor = .white
+        }
         return true
     }
 

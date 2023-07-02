@@ -15,14 +15,104 @@
                     <view key="view" contentMode="scaleToFill" id="Z7y-fn-GR6">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="Dab-vS-JJO">
+                                <rect key="frame" x="0.0" y="103" width="393" height="627"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="PriceTableViewCell" id="41z-uW-DeO" customClass="PriceTableViewCell" customModule="IosFinalProject" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="50" width="393" height="43.666667938232422"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="41z-uW-DeO" id="h3g-wh-tsQ">
+                                            <rect key="frame" x="0.0" y="0.0" width="393" height="43.666667938232422"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ChartsTableViewCell" id="MMW-rg-3ae" customClass="ChartsTableViewCell" customModule="IosFinalProject" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="93.666667938232422" width="393" height="43.666667938232422"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="MMW-rg-3ae" id="fSU-EM-Csj">
+                                            <rect key="frame" x="0.0" y="0.0" width="393" height="43.666667938232422"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="LabelAndButtonTableViewCell" id="kUf-qT-fvJ" customClass="LabelAndButtonTableViewCell" customModule="IosFinalProject" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="137.33333587646484" width="393" height="43.666667938232422"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="kUf-qT-fvJ" id="PNr-aJ-Ajj">
+                                            <rect key="frame" x="0.0" y="0.0" width="393" height="43.666667938232422"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="TradeTableViewCell" id="gcC-KX-Xey" customClass="TradeTableViewCell" customModule="IosFinalProject" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="181.00000381469727" width="393" height="43.666667938232422"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="gcC-KX-Xey" id="MKi-VO-zjh">
+                                            <rect key="frame" x="0.0" y="0.0" width="393" height="43.666667938232422"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="dDe-ot-lpN">
+                                <rect key="frame" x="16" y="730" width="361" height="72"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="mss-fP-nLm">
+                                        <rect key="frame" x="0.0" y="16" width="361" height="40"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mpl-bC-blf">
+                                                <rect key="frame" x="0.0" y="0.0" width="176.66666666666666" height="40"/>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="filled" title="買入">
+                                                    <color key="baseBackgroundColor" red="0.92933994529999997" green="0.32981914280000002" blue="0.33681488040000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                </buttonConfiguration>
+                                                <connections>
+                                                    <action selector="buyButton:" destination="EvM-xJ-Adw" eventType="touchUpInside" id="WrG-0h-8C9"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aZN-uh-x2g">
+                                                <rect key="frame" x="184.66666666666663" y="0.0" width="176.33333333333337" height="40"/>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="filled" title="賣出">
+                                                    <color key="baseBackgroundColor" red="0.86274516580000005" green="0.37254902719999999" blue="0.35686278339999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                                </buttonConfiguration>
+                                                <connections>
+                                                    <action selector="sellButton:" destination="EvM-xJ-Adw" eventType="touchUpInside" id="Xm5-s8-4zS"/>
+                                                </connections>
+                                            </button>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="72" id="1J6-Nn-uX8"/>
+                                    <constraint firstAttribute="bottom" secondItem="mss-fP-nLm" secondAttribute="bottom" constant="16" id="8rz-Gt-oWT"/>
+                                    <constraint firstAttribute="trailing" secondItem="mss-fP-nLm" secondAttribute="trailing" id="Igg-iY-9CE"/>
+                                    <constraint firstItem="mss-fP-nLm" firstAttribute="leading" secondItem="dDe-ot-lpN" secondAttribute="leading" id="Rub-9J-fKF"/>
+                                    <constraint firstItem="mss-fP-nLm" firstAttribute="top" secondItem="dDe-ot-lpN" secondAttribute="top" constant="16" id="ze0-rX-dwq"/>
+                                </constraints>
+                            </view>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="N3S-x0-v4w"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="N3S-x0-v4w" firstAttribute="trailing" secondItem="dDe-ot-lpN" secondAttribute="trailing" constant="16" id="2nV-Zv-eEU"/>
+                            <constraint firstItem="dDe-ot-lpN" firstAttribute="leading" secondItem="N3S-x0-v4w" secondAttribute="leading" constant="16" id="47D-Og-pu9"/>
+                            <constraint firstItem="N3S-x0-v4w" firstAttribute="bottom" secondItem="dDe-ot-lpN" secondAttribute="bottom" constant="16" id="Gjn-8y-XYD"/>
+                            <constraint firstItem="Dab-vS-JJO" firstAttribute="top" secondItem="N3S-x0-v4w" secondAttribute="top" id="p1w-rf-qAK"/>
+                            <constraint firstItem="N3S-x0-v4w" firstAttribute="trailing" secondItem="Dab-vS-JJO" secondAttribute="trailing" id="rH4-MQ-aVQ"/>
+                            <constraint firstItem="dDe-ot-lpN" firstAttribute="top" secondItem="Dab-vS-JJO" secondAttribute="bottom" id="sZF-05-QVh"/>
+                            <constraint firstItem="Dab-vS-JJO" firstAttribute="leading" secondItem="N3S-x0-v4w" secondAttribute="leading" id="wbj-SK-EBQ"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="某幣" id="BXw-82-fTV"/>
+                    <connections>
+                        <outlet property="ProductDetailTableView" destination="Dab-vS-JJO" id="FaA-3D-YPS"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tAQ-uQ-Em3" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2086.2595419847326" y="2270.4225352112676"/>
+            <point key="canvasLocation" x="-2086" y="2289"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
@@ -190,6 +280,22 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XYg-7c-MXU" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1253" y="746"/>
+        </scene>
+        <!--Trade Page View Controller-->
+        <scene sceneID="afT-7r-4vr">
+            <objects>
+                <viewController storyboardIdentifier="TradePageViewController" id="pm4-bX-ane" customClass="TradePageViewController" customModule="IosFinalProject" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="LO7-KI-xf9">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="4yY-c7-XY7"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="eLN-gY-L1D"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ehD-zP-ljT" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-3106" y="2289"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="JOt-TY-nmW">
