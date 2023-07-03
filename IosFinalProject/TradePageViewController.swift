@@ -68,6 +68,9 @@ class TradePageViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        guard let originalString = selectedCurrency else { return }
+        let modifiedString = originalString.replacingOccurrences(of: "-USD", with: "")
+        selectedCurrency = modifiedString
         setBackgroudView()
         setupCancelButton()
         setupCurrencyLabel()

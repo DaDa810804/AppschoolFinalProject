@@ -6,9 +6,14 @@
 //
 
 import UIKit
-//百分比上面的數字是low + high / 2
+import Starscream
+
 class ViewController: UIViewController {
 
+    
+//    var realTimeDataHandler: (([String]) -> Void)?
+
+    
     @IBOutlet weak var myTableView: UITableView!
     var isOverlayViewAdded = false
     var producArray: [String] = []
@@ -43,8 +48,15 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // 使用範例
-        ApiManager.shared.getOrder()
+        
+//        let websocketService = WebsocketService.shared
+//        websocketService.setWebsocket(currency: "BTC")
+//        websocketService.realTimeData = { data in
+//            // 处理每五秒收到的数据
+//            self.realTimeDataHandler?(data)
+//        }
+
+        
         myTableView.delegate = self
         myTableView.dataSource = self
         moneyLabel.text = "NT$\(inputNumber!)"
@@ -187,6 +199,12 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             let originalString = producArray[indexPath.row - 2]
             let modifiedString = originalString.replacingOccurrences(of: "-USD", with: "")
             cell?.topLabel.text = modifiedString
+            
+//            self.realTimeDataHandler = { data in
+//                // 处理每五秒收到的数据，例如更新UI或执行其他操作
+//                print("Received real-time data: \(data)")
+//            }
+            
             return cell!
         }
 

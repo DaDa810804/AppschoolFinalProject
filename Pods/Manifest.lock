@@ -6,6 +6,7 @@ PODS:
   - iCarousel (1.8.3)
   - IQKeyboardManagerSwift (6.5.11)
   - MJRefresh (3.7.5)
+  - Starscream (4.0.4)
   - SwiftAlgorithms (1.0.0)
   - SwiftLint (0.52.2)
   - TensorFlowLiteC (2.12.0):
@@ -21,6 +22,7 @@ DEPENDENCIES:
   - iCarousel
   - IQKeyboardManagerSwift
   - MJRefresh
+  - Starscream
   - SwiftLint
   - TensorFlowLiteSwift
 
@@ -30,6 +32,7 @@ SPEC REPOS:
     - iCarousel
     - IQKeyboardManagerSwift
     - MJRefresh
+    - Starscream
     - SwiftAlgorithms
     - SwiftLint
     - TensorFlowLiteC
@@ -40,11 +43,12 @@ SPEC CHECKSUMS:
   iCarousel: d782f635afac190c49bb8ee455882284cff8b85f
   IQKeyboardManagerSwift: c7955c0bdbf7b2eb29bb7daaa44e3d90f55a9a85
   MJRefresh: fdf5e979eb406a0341468932d1dfc8b7f9fce961
+  Starscream: 5178aed56b316f13fa3bc55694e583d35dd414d9
   SwiftAlgorithms: 38dda4731d19027fdeee1125f973111bf3386b53
   SwiftLint: 1ac76dac888ca05cb0cf24d0c85887ec1209961d
   TensorFlowLiteC: 20785a69299185a379ba9852b6625f00afd7984a
   TensorFlowLiteSwift: 3a4928286e9e35bdd3e17970f48e53c80d25e793
 
-PODFILE CHECKSUM: e4c944698d32697cdc80acb68b8bb16d52f5d005
+PODFILE CHECKSUM: edc2439150cd4adeee6b1eb70cd9e8c76fae5318
 
 COCOAPODS: 1.11.3

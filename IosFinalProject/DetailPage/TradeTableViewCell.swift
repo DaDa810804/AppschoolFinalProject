@@ -15,15 +15,11 @@ class TradeTableViewCell: UITableViewCell {
 //        label.text = "BUY"
 //        label.textAlignment = .center
 //        label.textColor = .white
-//        label.font = UIFont.systemFont(ofSize: 10)
-//        label.layer.cornerRadius = 8
-//        label.layer.borderWidth = 1
-//        label.layer.borderColor = UIColor.green.cgColor
-//        label.backgroundColor = UIColor.clear
-//        label.padding = UIEdgeInsets(top: 4, left: 8, bottom: 4, right: 8)
+//        label.font = UIFont.systemFont(ofSize: 14)
 //        return label
 //    }()
-    let topLabel1: UIView = {
+    
+    let topLabelView: UIView = {
         let container = UIView()
         container.translatesAutoresizingMaskIntoConstraints = false
         container.layer.cornerRadius = 4
@@ -55,7 +51,7 @@ class TradeTableViewCell: UITableViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "2021-01-30 08:31"
-        label.textAlignment = .center
+        label.textAlignment = .left
         label.textColor = .lightGray
         label.font = UIFont.systemFont(ofSize: 12)
         // 设置下面第一个标签的样式、内容等
@@ -130,7 +126,7 @@ class TradeTableViewCell: UITableViewCell {
     }
     
     func setupUI(){
-        contentView.addSubview(topLabel1)
+        contentView.addSubview(topLabelView)
         contentView.addSubview(topLabel2)
         
         contentView.addSubview(middleLabel1)
@@ -144,16 +140,17 @@ class TradeTableViewCell: UITableViewCell {
         
         NSLayoutConstraint.activate([
 
-            topLabel1.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: margin),
-            topLabel1.topAnchor.constraint(equalTo: contentView.topAnchor, constant: margin),
+            topLabelView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: margin),
+            topLabelView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: margin),
+            topLabelView.widthAnchor.constraint(equalToConstant: 40),
             
-            topLabel2.leadingAnchor.constraint(equalTo: topLabel1.trailingAnchor,constant: 8),
+            topLabel2.leadingAnchor.constraint(equalTo: topLabelView.trailingAnchor,constant: 8),
             topLabel2.topAnchor.constraint(equalTo: contentView.topAnchor, constant: margin),
-            topLabel2.trailingAnchor.constraint(equalTo: contentView.centerXAnchor, constant: -margin),
-            topLabel2.centerYAnchor.constraint(equalTo: topLabel1.centerYAnchor),
+            topLabel2.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -margin),
+            topLabel2.centerYAnchor.constraint(equalTo: topLabelView.centerYAnchor),
             
             middleLabel1.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: margin),
-            middleLabel1.topAnchor.constraint(equalTo: topLabel1.bottomAnchor, constant: margin),
+            middleLabel1.topAnchor.constraint(equalTo: topLabelView.bottomAnchor, constant: margin),
             middleLabel1.trailingAnchor.constraint(equalTo: contentView.centerXAnchor, constant: margin),
             
             middleLabel2.leadingAnchor.constraint(equalTo: contentView.centerXAnchor, constant: margin),
@@ -174,5 +171,50 @@ class TradeTableViewCell: UITableViewCell {
             bottomLabel2.topAnchor.constraint(equalTo: middleLabel2.bottomAnchor),
             bottomLabel2.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -margin)
         ])
+        
+        setTopLabelViewText("BUY")
+        
+        // 设置topLabel2的文本
+        setTopLabel2Text("2021-01-30 08:31")
+        
+        // 设置middleLabel1的文本
+        setMiddleLabel1Text("購入 USDT")
+        
+        // 设置middleLabel2的文本
+        setMiddleLabel2Text("1,065.340909")
+        
+        // 设置bottomLabel1的文本
+        setBottomLabel1Text("成功")
+        
+        // 设置bottomLabel2的文本
+        setBottomLabel2Text("NT$ 30,000")
     }
+    
+
+    func setTopLabelViewText(_ text: String) {
+        if let label = topLabelView.subviews.compactMap({ $0 as? UILabel }).first {
+            label.text = text
+        }
+    }
+
+    func setTopLabel2Text(_ text: String) {
+        topLabel2.text = text
+    }
+
+    func setMiddleLabel1Text(_ text: String) {
+        middleLabel1.text = text
+    }
+
+    func setMiddleLabel2Text(_ text: String) {
+        middleLabel2.text = text
+    }
+
+    func setBottomLabel1Text(_ text: String) {
+        bottomLabel1.text = text
+    }
+
+    func setBottomLabel2Text(_ text: String) {
+        bottomLabel2.text = text
+    }
+
 }

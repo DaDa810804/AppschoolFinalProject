@@ -10,6 +10,7 @@ target 'IosFinalProject' do
     pod 'TensorFlowLiteSwift'
     pod 'Charts'
     pod 'iCarousel'
+    pod 'Starscream'
   # Pods for IosFinalProject
 
 end
