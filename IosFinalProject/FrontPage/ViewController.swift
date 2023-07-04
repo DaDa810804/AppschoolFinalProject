@@ -10,10 +10,6 @@ import Starscream
 
 class ViewController: UIViewController {
 
-    
-//    var realTimeDataHandler: (([String]) -> Void)?
-
-    
     @IBOutlet weak var myTableView: UITableView!
     var isOverlayViewAdded = false
     var producArray: [String] = []
@@ -48,15 +44,6 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-//        let websocketService = WebsocketService.shared
-//        websocketService.setWebsocket(currency: "BTC")
-//        websocketService.realTimeData = { data in
-//            // 处理每五秒收到的数据
-//            self.realTimeDataHandler?(data)
-//        }
-
-        
         myTableView.delegate = self
         myTableView.dataSource = self
         moneyLabel.text = "NT$\(inputNumber!)"
@@ -66,6 +53,7 @@ class ViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         self.navigationController?.setNavigationBarHidden(true, animated: false)
         ApiManager.shared.getProducts { products in
             self.producArray = products

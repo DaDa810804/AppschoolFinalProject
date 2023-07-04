@@ -1,0 +1,50 @@
+PODS:
+  - Charts (4.1.0):
+    - Charts/Core (= 4.1.0)
+  - Charts/Core (4.1.0):
+    - SwiftAlgorithms (~> 1.0)
+  - iCarousel (1.8.3)
+  - IQKeyboardManagerSwift (6.5.11)
+  - MJRefresh (3.7.5)
+  - SwiftAlgorithms (1.0.0)
+  - SwiftLint (0.52.2)
+  - TensorFlowLiteC (2.12.0):
+    - TensorFlowLiteC/Core (= 2.12.0)
+  - TensorFlowLiteC/Core (2.12.0)
+  - TensorFlowLiteSwift (2.12.0):
+    - TensorFlowLiteSwift/Core (= 2.12.0)
+  - TensorFlowLiteSwift/Core (2.12.0):
+    - TensorFlowLiteC (= 2.12.0)
+
+DEPENDENCIES:
+  - Charts
+  - iCarousel
+  - IQKeyboardManagerSwift
+  - MJRefresh
+  - SwiftLint
+  - TensorFlowLiteSwift
+
+SPEC REPOS:
+  trunk:
+    - Charts
+    - iCarousel
+    - IQKeyboardManagerSwift
+    - MJRefresh
+    - SwiftAlgorithms
+    - SwiftLint
+    - TensorFlowLiteC
+    - TensorFlowLiteSwift
+
+SPEC CHECKSUMS:
+  Charts: 354f86803d11d9c35de280587fef50d1af063978
+  iCarousel: d782f635afac190c49bb8ee455882284cff8b85f
+  IQKeyboardManagerSwift: c7955c0bdbf7b2eb29bb7daaa44e3d90f55a9a85
+  MJRefresh: fdf5e979eb406a0341468932d1dfc8b7f9fce961
+  SwiftAlgorithms: 38dda4731d19027fdeee1125f973111bf3386b53
+  SwiftLint: 1ac76dac888ca05cb0cf24d0c85887ec1209961d
+  TensorFlowLiteC: 20785a69299185a379ba9852b6625f00afd7984a
+  TensorFlowLiteSwift: 3a4928286e9e35bdd3e17970f48e53c80d25e793
+
+PODFILE CHECKSUM: e4c944698d32697cdc80acb68b8bb16d52f5d005
+
+COCOAPODS: 1.11.3

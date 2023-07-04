@@ -12,23 +12,26 @@ class ChartsTableViewCell: UITableViewCell {
     var getPriceCell: (() -> (PriceTableViewCell))!
     var isValueSelected = false
     var data: LineChartData!
+    var selectedCurrency: String?
     var minXIndex: Double!
     var maxXIndex: Double!
     var dataSet: LineChartDataSet!
-    var allTestArray: [[Double]] = [
-[24.453, 24.5434, 24.865, 25.3, 23.2344, 24.2353, 24.822, 24.1422, 23.2123,
-                               25.2, 24.23435, 22.8, 24.122, 24.33, 23.23, 24.235, 24.8, 25.122, 25.423]
-,[24.45, 24.1434, 24.865, 25.3, 24.2344, 24.2353, 24.822, 24.1422, 24.2123,
-                                25.5, 24.24435, 23.8, 24.122, 25, 23.23, 23.235, 23.8, 24.122, 25.123]
-,[25.45, 26.1434, 25.865, 25.3, 25.2344, 25.2353, 24.822, 24.1422, 24.2123,
-                                 25.5, 25.24435, 25.8, 26.122, 25, 25.23, 23.235, 24.8, 28.122, 25.123]
-,[25.453, 23.5434, 24.865, 25.3, 25.2344, 24.2353, 24.822, 24.1422, 23.2123,
-                               25.2, 24.23435, 22.8, 24.122, 24.33, 23.23, 24.235, 24.8, 25.122, 25.423]
-,[23.45, 24.1434, 24.865, 25.3, 24.2344, 26.2353, 24.822, 24.1422, 24.2123,
-                                25.5, 25.24435, 26.8, 24.122, 24, 23.23, 23.235, 23.8, 29.122, 25.123]
-,[25.45, 23.1434, 24.865, 25.3, 25.2344, 25.2353, 24.822, 24.1422, 24.2123,
-                                 25.5, 25.24435, 25.8, 28.122, 25, 25.23, 23.235, 24.8, 24.122, 25.123]
-        ]
+    var rightDataArray: [Double] = []
+    var dayArray:[Double] = []
+//    var allTestArray: [[Double]] = [
+//[24.453, 24.5434, 24.865, 25.3, 23.2344, 24.2353, 24.822, 24.1422, 23.2123,
+//                               25.2, 24.23435, 22.8, 24.122, 24.33, 23.23, 24.235, 24.8, 25.122, 25.423]
+//,[24.45, 24.1434, 24.865, 25.3, 24.2344, 24.2353, 24.822, 24.1422, 24.2123,
+//                                25.5, 24.24435, 23.8, 24.122, 25, 23.23, 23.235, 23.8, 24.122, 25.123]
+//,[25.45, 26.1434, 25.865, 25.3, 25.2344, 25.2353, 24.822, 24.1422, 24.2123,
+//                                 25.5, 25.24435, 25.8, 26.122, 25, 25.23, 23.235, 24.8, 28.122, 25.123]
+//,[25.453, 23.5434, 24.865, 25.3, 25.2344, 24.2353, 24.822, 24.1422, 23.2123,
+//                               25.2, 24.23435, 22.8, 24.122, 24.33, 23.23, 24.235, 24.8, 25.122, 25.423]
+//,[23.45, 24.1434, 24.865, 25.3, 24.2344, 26.2353, 24.822, 24.1422, 24.2123,
+//                                25.5, 25.24435, 26.8, 24.122, 24, 23.23, 23.235, 23.8, 29.122, 25.123]
+//,[25.45, 23.1434, 24.865, 25.3, 25.2344, 25.2353, 24.822, 24.1422, 24.2123,
+//                                 25.5, 25.24435, 25.8, 28.122, 25, 25.23, 23.235, 24.8, 24.122, 25.123]
+//        ]
     var dataEntries: [ChartDataEntry] = []
 
     
@@ -43,7 +46,7 @@ class ChartsTableViewCell: UITableViewCell {
         setupLineChartView()
         setupButtons()
         setupIndicatorView()
-        setChartView(dataArray: allTestArray.first!)
+//        setChartView(dataArray: rightDataArray)
         lineChartView.setViewPortOffsets(left: 0, top: 0, right: 0, bottom: 20)
 //        updateViews()
     }
@@ -114,7 +117,95 @@ class ChartsTableViewCell: UITableViewCell {
     @objc func buttonTapped(_ sender: UIButton) {
         let index = sender.tag
         updateIndicatorPosition(for: index)
-        changeChartViewData(dataArray: allTestArray[index])
+        if index == 0 {
+            ApiManager.shared.fetchCandleData(productID: selectedCurrency!, timeRange: TimeRange.oneDay) {
+                candles, error in
+                if candles?.isEmpty == false {
+                    var dayArray: [Double] = [] ; var chartsArray: [Double] = []
+                    for index in candles! {
+                        dayArray.append(index.time)
+                        chartsArray.append((index.high + index.low) / 2)
+                    }
+                    DispatchQueue.main.async {
+                        self.dayArray = dayArray.reversed()
+                        self.changeChartViewData(dataArray: chartsArray.reversed())
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        self.changeChartViewData(dataArray: [0,0])
+                    }
+                }
+            }
+        } else if index == 1 {
+            ApiManager.shared.fetchCandleData(productID: selectedCurrency!, timeRange: TimeRange.oneWeek) {
+                candles, error in
+                var chartsArray: [Double] = []
+                var dayArray: [Double] = []
+                for index in candles! {
+                    dayArray.append(index.time)
+                    chartsArray.append((index.high + index.low) / 2)
+                }
+                DispatchQueue.main.async {
+                    self.dayArray = dayArray.reversed()
+                    self.changeChartViewData(dataArray: chartsArray.reversed())
+                }
+            }
+        } else if index == 2 {
+            ApiManager.shared.fetchCandleData(productID: selectedCurrency!, timeRange: TimeRange.oneMonth) {
+                candles, error in
+                var chartsArray: [Double] = []
+                var dayArray: [Double] = []
+                for index in candles! {
+                    self.dayArray.append(index.time)
+                    chartsArray.append((index.high + index.low) / 2)
+                }
+                DispatchQueue.main.async {
+                    self.changeChartViewData(dataArray: chartsArray.reversed())
+                    self.changeChartViewData(dataArray: chartsArray.reversed())
+                }
+            }
+        } else if index == 3 {
+            ApiManager.shared.fetchCandleData(productID: selectedCurrency!, timeRange: TimeRange.threeMonths) {
+                candles, error in
+                var chartsArray: [Double] = []
+                var dayArray: [Double] = []
+                for index in candles! {
+                    dayArray.append(index.time)
+                    chartsArray.append((index.high + index.low) / 2)
+                }
+                DispatchQueue.main.async {
+                    self.dayArray = dayArray.reversed()
+                    self.changeChartViewData(dataArray: chartsArray.reversed())
+                }
+            }
+        } else if index == 4 {
+            ApiManager.shared.fetchCandleYearData(productID: selectedCurrency!, timeRange: TimeRange.oneYear) {
+                candles, error in
+                var chartsArray: [Double] = []
+                var dayArray: [Double] = []
+                for index in candles! {
+                    dayArray.append(index.time)
+                    chartsArray.append((index.high + index.low) / 2)
+                }
+                DispatchQueue.main.async {
+                    self.dayArray = dayArray
+                    self.changeChartViewData(dataArray: chartsArray)
+                }
+            }
+        } else if index == 5 {
+            ApiManager.shared.fetchAllCandleData(productID: selectedCurrency!) { candles, error in
+                var chartsArray: [Double] = []
+                var dayArray: [Double] = []
+                for index in candles! {
+                    dayArray.append(index.time)
+                    chartsArray.append((index.high + index.low) / 2)
+                }
+                DispatchQueue.main.async {
+                    self.dayArray = dayArray.reversed()
+                    self.changeChartViewData(dataArray: chartsArray.reversed())
+                }
+            }
+        }
         for (buttonIndex, button) in stackView.arrangedSubviews.enumerated() {
             if let button = button as? UIButton {
                 if buttonIndex == index {
@@ -188,7 +279,7 @@ extension ChartsTableViewCell: ChartViewDelegate {
 
         if let selectedEntry = dataEntries.first {
 
-            let coinImage = UIImage(named: "btc")
+            let coinImage = UIImage(named: "fulldown")
             let coinMarker = ImageMarkerView(color: .clear, font: .systemFont(ofSize: 10), textColor: .white, insets: .zero, image: coinImage)
             coinMarker.refreshContent(entry: selectedEntry, highlight: Highlight(x: selectedEntry.x, y: selectedEntry.y, dataSetIndex: 0))
             lineChartView.marker = coinMarker
@@ -209,7 +300,8 @@ extension ChartsTableViewCell: ChartViewDelegate {
         lineChartView.doubleTapToZoomEnabled = false
 //        lineChartView.xAxis.valueFormatter = XAxisValueFormatter(monthlyTotalAmounts: monthlyTotalAmounts)
         // 設定折線圖的數據
-        changeChartViewData(dataArray: allTestArray.last!)
+//        changeChartViewData(dataArray: allTestArray.last!)
+        changeChartViewData(dataArray: dataArray)
     }
     
     func chartViewDidEndPanning(_ chartView: ChartViewBase) {
@@ -231,9 +323,9 @@ extension ChartsTableViewCell: ChartViewDelegate {
         print("要讓我的畫面上變成只有一個label來顯示使用者點選到的價錢\(entry.y)")
         isValueSelected = true
         updateViews()
-        getPriceCell().changeMiddeValue(yValue: entry.y)
-//        historyAverageLabel.text = "\(entry.y)"
-//        historyAverageView.isHidden = false
+        let timeIndex = Int(entry.x) - 1
+        let time = dayArray[timeIndex]
+        getPriceCell().changeMiddeValue(yValue: entry.y,timeValue: time)
     }
     
     private func updateViews() {
@@ -253,7 +345,7 @@ extension ChartsTableViewCell: ValueFormatter {
     
     func stringForValue(_ value: Double, entry: Charts.ChartDataEntry, dataSetIndex: Int, viewPortHandler: Charts.ViewPortHandler?) -> String {
         if entry.x == minXIndex || entry.x == maxXIndex {
-            entry.icon = UIImage(named: "bch")
+            entry.icon = UIImage(named: "down")
             
             return "\(value)"
         } else {

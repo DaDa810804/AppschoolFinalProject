@@ -13,6 +13,8 @@ class ProductDetailViewController: UIViewController {
     @IBOutlet weak var productDetailTableView: UITableView!
     var selectedCurrency: String?
     var ordersArray: [Order] = []
+    var candlesArray: [Candles] = []
+    var chartsArray: [Double] = []
     override func viewDidLoad() {
         super.viewDidLoad()
         productDetailTableView.dataSource = self
@@ -22,6 +24,20 @@ class ProductDetailViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        //拿折線圖資料
+//        if let selectedCurrency = selectedCurrency {
+//            ApiManager.shared.fetchCandleData(productID: selectedCurrency, timeRange: TimeRange.oneDay) { candles,error  in
+//                var chartsArray: [Double] = []
+//                for index in candles! {
+//                    chartsArray.append((index.high + index.low) / 2)
+//                }
+//                DispatchQueue.main.async {
+//                    self.chartsArray = chartsArray
+//                    self.productDetailTableView.reloadData()
+//                }
+//            }
+//        }
+
         //五秒傳值
         let websocketService = WebsocketService.shared
         websocketService.setWebsocket(currency: selectedCurrency!)
@@ -96,6 +112,37 @@ extension ProductDetailViewController: UITableViewDelegate, UITableViewDataSourc
                 }
                 return cell
             }
+            if let selectedCurrency = selectedCurrency {
+                ApiManager.shared.fetchCandleData(productID: selectedCurrency, timeRange: TimeRange.oneDay) { candles, error in
+                    print("candles\(candles)")
+                    var chartsArray: [Double] = []
+                    var dayArray: [Double] = []
+                    if candles?.isEmpty == false {
+                        print("有東西")
+                        if let candles = candles {
+                            for index in candles {
+                                dayArray.append(index.time)
+                                chartsArray.append((index.high + index.low) / 2)
+                            }
+
+                            DispatchQueue.main.async {
+                                // 在主队列中更新单元格
+                                if let chartsCell = self.productDetailTableView.cellForRow(at: IndexPath(row: 1, section: 0)) as? ChartsTableViewCell {
+                                    chartsCell.dayArray = dayArray.reversed()
+                                    chartsCell.setChartView(dataArray: chartsArray.reversed())
+                                    chartsCell.selectedCurrency = self.selectedCurrency
+                                }
+                            }
+                        }
+                    } else {
+                        DispatchQueue.main.async {
+                            chartsCell.setChartView(dataArray: [0,0])
+                            chartsCell.selectedCurrency = self.selectedCurrency
+                        }
+                    }
+                }
+            }
+
             return chartsCell
         } else if indexPath.row == 2 {
             guard let labelCell = productDetailTableView.dequeueReusableCell(withIdentifier: "LabelAndButtonTableViewCell", for: indexPath) as? LabelAndButtonTableViewCell else

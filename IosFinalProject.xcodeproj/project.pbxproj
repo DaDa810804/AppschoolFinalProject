@@ -36,6 +36,8 @@
 		7217FB182A51543300A9DA85 /* USDToTWD.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7217FB172A51543300A9DA85 /* USDToTWD.swift */; };
 		7217FB1A2A5193C300A9DA85 /* FucnAdd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7217FB192A5193C300A9DA85 /* FucnAdd.swift */; };
 		72E921B02A52C7640049A08E /* WebsocketService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72E921AF2A52C7640049A08E /* WebsocketService.swift */; };
+		72E921B22A52F4170049A08E /* CandlesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72E921B12A52F4170049A08E /* CandlesModel.swift */; };
+		72E921B42A5429480049A08E /* AllDataAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72E921B32A5429480049A08E /* AllDataAPI.swift */; };
 		D7520B3D87E8ACAEF09C1FDF /* Pods_IosFinalProject.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 458CB4B3930412546970998D /* Pods_IosFinalProject.framework */; };
 /* End PBXBuildFile section */
 
@@ -72,6 +74,8 @@
 		7217FB172A51543300A9DA85 /* USDToTWD.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = USDToTWD.swift; sourceTree = "<group>"; };
 		7217FB192A5193C300A9DA85 /* FucnAdd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FucnAdd.swift; sourceTree = "<group>"; };
 		72E921AF2A52C7640049A08E /* WebsocketService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebsocketService.swift; sourceTree = "<group>"; };
+		72E921B12A52F4170049A08E /* CandlesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CandlesModel.swift; sourceTree = "<group>"; };
+		72E921B32A5429480049A08E /* AllDataAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllDataAPI.swift; sourceTree = "<group>"; };
 		C882CD4986214B00E46E86F2 /* Pods-IosFinalProject.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IosFinalProject.debug.xcconfig"; path = "Target Support Files/Pods-IosFinalProject/Pods-IosFinalProject.debug.xcconfig"; sourceTree = "<group>"; };
 		D825DEFFA12F28383E30E5D9 /* Pods-IosFinalProject.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IosFinalProject.release.xcconfig"; path = "Target Support Files/Pods-IosFinalProject/Pods-IosFinalProject.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -148,6 +152,8 @@
 				7217FAC52A4C360900A9DA85 /* APIManeger.swift */,
 				7217FB172A51543300A9DA85 /* USDToTWD.swift */,
 				72E921AF2A52C7640049A08E /* WebsocketService.swift */,
+				72E921B12A52F4170049A08E /* CandlesModel.swift */,
+				72E921B32A5429480049A08E /* AllDataAPI.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -341,6 +347,7 @@
 				7217FB002A4E9E5000A9DA85 /* ProductDetailViewController.swift in Sources */,
 				7217FB072A4EAAD800A9DA85 /* TradeTableViewCell.swift in Sources */,
 				7217FAB62A4C1FAF00A9DA85 /* IosFinalProject.xcdatamodeld in Sources */,
+				72E921B42A5429480049A08E /* AllDataAPI.swift in Sources */,
 				7217FAB02A4C1FAF00A9DA85 /* ViewController.swift in Sources */,
 				7217FAFA2A4DC55A00A9DA85 /* ProductCandles.swift in Sources */,
 				7217FACE2A4C652000A9DA85 /* SecondTableViewCell.swift in Sources */,
@@ -353,6 +360,7 @@
 				7217FB0C2A4EF91600A9DA85 /* Color.swift in Sources */,
 				7217FAAC2A4C1FAF00A9DA85 /* AppDelegate.swift in Sources */,
 				7217FAF82A4DC55A00A9DA85 /* AccountModel.swift in Sources */,
+				72E921B22A52F4170049A08E /* CandlesModel.swift in Sources */,
 				7217FB0E2A4F06AE00A9DA85 /* TradePageViewController.swift in Sources */,
 				7217FAAE2A4C1FAF00A9DA85 /* SceneDelegate.swift in Sources */,
 				7217FACC2A4C650800A9DA85 /* ThirdTableViewCell.swift in Sources */,

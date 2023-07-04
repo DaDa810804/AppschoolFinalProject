@@ -188,7 +188,15 @@ class PriceTableViewCell: UITableViewCell {
         }
     }
     
-    func changeMiddeValue(yValue: Any) {
+    func changeMiddeValue(yValue: Any,timeValue: Any) {
+        let timestamp: TimeInterval = (timeValue as? TimeInterval)!
+        let date = Date(timeIntervalSince1970: timestamp)
+
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
+        let formattedDate = dateFormatter.string(from: date)
+        
         self.middleLabel2.text = "\(yValue)"
+        self.middleLabel3.text = "\(formattedDate)"
     }
 }
