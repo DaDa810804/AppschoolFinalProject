@@ -48,6 +48,7 @@ class ProductDetailViewController: UIViewController {
         
         ApiManager.shared.getOrders(productId: selectedCurrency!) { orders in
             if let orders = orders {
+                print("ordersorders\(orders)")
                 self.ordersArray = orders
                 DispatchQueue.main.async {
                     self.productDetailTableView.reloadData()
@@ -60,23 +61,27 @@ class ProductDetailViewController: UIViewController {
     }
     
     @IBAction func buyButton(_ sender: UIButton) {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil) // 替换为您的故事板名称
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let destinationVC = storyboard.instantiateViewController(withIdentifier: "TradePageViewController") as? TradePageViewController
+        let navController = UINavigationController(rootViewController: destinationVC!)
+        navController.modalPresentationStyle = .fullScreen
         destinationVC?.hidesBottomBarWhenPushed = true
         destinationVC?.isBuying = true
         destinationVC?.modalPresentationStyle = .fullScreen
-        destinationVC?.selectedCurrency = selectedCurrency //之後是該頁面為何種幣別，再將其傳入
-        present(destinationVC!, animated: true)
+        destinationVC?.selectedCurrency = selectedCurrency
+        present(navController, animated: true)
     }
     
     @IBAction func sellButton(_ sender: UIButton) {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil) // 替换为您的故事板名称
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let destinationVC = storyboard.instantiateViewController(withIdentifier: "TradePageViewController") as? TradePageViewController
+        let navController = UINavigationController(rootViewController: destinationVC!)
+        navController.modalPresentationStyle = .fullScreen
         destinationVC?.hidesBottomBarWhenPushed = true
         destinationVC?.isBuying = false
         destinationVC?.modalPresentationStyle = .fullScreen
-        destinationVC?.selectedCurrency = selectedCurrency //之後是該頁面為何種幣別，再將其傳入
-        present(destinationVC!, animated: true)
+        destinationVC?.selectedCurrency = selectedCurrency
+        present(navController, animated: true)
     }
 }
 
@@ -97,8 +102,8 @@ extension ProductDetailViewController: UITableViewDelegate, UITableViewDataSourc
             self.realTimeDataHandler = { data in
                 // 处理每五秒收到的数据，例如更新UI或执行其他操作
                 DispatchQueue.main.async {
-                    priceCell.bottomLabel1.text = "\(data.first!)"
-                    priceCell.bottomLabel2.text = "\(data.last!)"
+                    priceCell.bottomLabel1.text = "\(data.last!)"
+                    priceCell.bottomLabel2.text = "\(data.first!)"
                 }
                 print("Received real-time data: \(data)")
             }
@@ -162,7 +167,7 @@ extension ProductDetailViewController: UITableViewDelegate, UITableViewDataSourc
             tradeCell.setMiddleLabel1Text("\(side) \(modifiedString)")
             tradeCell.setMiddleLabel2Text("\(order.size)")
             tradeCell.setBottomLabel1Text("\(order.status)")
-            tradeCell.setBottomLabel2Text("\(order.price)")
+//            tradeCell.setBottomLabel2Text("\(order.price)")
             return tradeCell
         }
     }

@@ -32,7 +32,23 @@ struct TickerMessage: Codable {
 //    let time: String
 //    let tradeId: Int
 //    let lastSize: String
-    
+//type: 類型
+//sequence: 序列
+//productId: 產品ID
+//price: 價格
+//open24h: 過去24小時開盤價
+//volume24h: 過去24小時交易量
+//low24h: 過去24小時最低價
+//high24h: 過去24小時最高價
+//volume30d: 過去30天交易量
+//bestBid: 最佳買價
+//bestBidSize: 最佳買價量
+//bestAsk: 最佳賣價
+//bestAskSize: 最佳賣價量
+//side: 交易方向
+//time: 時間
+//tradeId: 交易ID
+//lastSize: 最後成交量
     enum CodingKeys: String, CodingKey {
 //        case type
 //        case sequence
@@ -61,7 +77,7 @@ class WebsocketService: WebSocketDelegate {
     var realTimeData: (([String]) -> ())?
     
     func setWebsocket(currency: String) {
-        let request = URLRequest(url: URL(string: "wss://ws-feed.exchange.coinbase.com")!)
+        let request = URLRequest(url: URL(string: "wss://ws-feed-public.sandbox.exchange.coinbase.com")!)
         socket = WebSocket(request: request)
         socket.delegate = self
         socket.connect()

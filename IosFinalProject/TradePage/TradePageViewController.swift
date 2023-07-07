@@ -8,9 +8,35 @@
 import UIKit
 
 class TradePageViewController: UIViewController {
-    
+    var realTimeDataHandler: (([String]) -> Void)?
     var isBuying: Bool?
     var selectedCurrency: String?
+    var instantAmount: String = "0"
+    let availableBalanceLabel = UILabel()
+    var availableBalance: Double?
+    var isTopTextFieldEditable = true
+    var buyPrice: Double? {
+        didSet {
+            // 当buyPrice的值发生更改时，重新计算计算值
+            if isTopTextFieldEditable == true {
+                //上方文字輸入匡可以編輯
+                if let text = topTextField.text, let buyPrice = buyPrice, let number = Double(text) {
+                    let calculatedValue = number * buyPrice
+                    bottomTextField.text = String(format: "%.2f", calculatedValue)
+                } else {
+                    bottomTextField.text = ""
+                }
+            } else {
+                //下方文字輸入匡可以編輯
+                if let text = bottomTextField.text,let buyPrice = buyPrice, let number = Double(text) {
+                    let calculatedValue = number / buyPrice
+                    topTextField.text = String(format: "%.2f", calculatedValue)
+                } else {
+                    topTextField.text = ""
+                }
+            }
+        }
+    }
     
     let redView: UIView = {
         let view = UIView()
@@ -34,7 +60,17 @@ class TradePageViewController: UIViewController {
         return view
     }()
     
-    let textField: UITextField = {
+    
+    let currencyLabel: UILabel = {
+        let currencyLabel = UILabel()
+        currencyLabel.translatesAutoresizingMaskIntoConstraints = false
+        currencyLabel.textColor = .white
+        currencyLabel.font = UIFont.boldSystemFont(ofSize: 16)
+        currencyLabel.textAlignment = .center
+        return currencyLabel
+    }()
+    
+    let topTextField: UITextField = {
         let textField = UITextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
         textField.placeholder = "Enter text"
@@ -68,19 +104,71 @@ class TradePageViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        guard let originalString = selectedCurrency else { return }
-        let modifiedString = originalString.replacingOccurrences(of: "-USD", with: "")
-        selectedCurrency = modifiedString
+        bottomTextField.isUserInteractionEnabled = false
+        bottomTextField.placeholder = ""
+        topTextField.addTarget(self, action: #selector(topTextFieldChanged(_:)), for: .editingChanged)
+        bottomTextField.addTarget(self, action: #selector(bottomTextFieldChanged(_:)), for: .editingChanged)
         setBackgroudView()
         setupCancelButton()
         setupCurrencyLabel()
         addElementsToOverlayView()
+        topTextField.delegate = self
+        bottomTextField.delegate = self
+        self.realTimeDataHandler = { data in
+            // 处理每五秒收到的数据，例如更新UI或执行其他操作
+            DispatchQueue.main.async {
+                let valueToUpdate = self.isBuying == true ? data.last : data.first
+                guard let originalString = self.selectedCurrency else { return }
+                let modifiedString = originalString.replacingOccurrences(of: "-USD", with: "")
+                let text = "1 \(modifiedString ?? "") = \(valueToUpdate ?? "") USD"
+                let attributedText = NSMutableAttributedString(string: text)
+                self.buyPrice = Double(valueToUpdate!)
+                if let value = valueToUpdate {
+                    let range = (text as NSString).range(of: "\(value)")
+                    attributedText.addAttributes([NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 22)], range: range)
+                }
+                
+                self.currencyLabel.attributedText = attributedText
+            }
 
+            print("第二頁Received real-time data: \(data)")
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationController?.navigationBar.isHidden = true
+        ApiManager.shared.getAccounts { accounts in
+            guard let originalString = self.selectedCurrency else { return }
+            let modifiedString = originalString.replacingOccurrences(of: "-USD", with: "")
+            if let balance = self.getCurrencyBalance(accounts: accounts,productID: modifiedString) {
+                DispatchQueue.main.async {
+                    if let number = Double(balance) {
+                        let formatter = NumberFormatter()
+                        formatter.minimumFractionDigits = 2
+                        formatter.maximumFractionDigits = 2
+                        
+                        if let formattedString = formatter.string(from: NSNumber(value: number)) {
+                            self.availableBalanceLabel.text = "可用餘額: \(formattedString) \(modifiedString)"
+                            self.availableBalance = Double(formattedString)
+                        }
+                    }
+                }
+            } else {
+                DispatchQueue.main.async {
+                    self.availableBalanceLabel.text = "可用餘額: 0.00 \(modifiedString)"
+                }
+            }
+        }
         setupTradeLimitsLabel()
         setupBottomButton()
+        let websocketService = WebsocketService.shared
+        websocketService.setWebsocket(currency: selectedCurrency!)
+        websocketService.realTimeData = { [weak self] data in
+            // 处理每五秒收到的数据
+            self?.realTimeDataHandler?(data)
+        }
+        
     }
 
     override func viewDidLayoutSubviews() {
@@ -128,10 +216,12 @@ class TradePageViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .white
         label.font = UIFont.systemFont(ofSize: 18,weight: .bold)
+        guard let originalString = selectedCurrency else { return }
+        let modifiedString = originalString.replacingOccurrences(of: "-USD", with: "")
         if let isBuying = isBuying, isBuying {
-            label.text = "買入 \(selectedCurrency!)"
+            label.text = "買入 \(modifiedString)"
         } else {
-            label.text = "賣出 \(selectedCurrency!)"
+            label.text = "賣出 \(modifiedString)"
         }
         view.addSubview(label)
         
@@ -145,16 +235,12 @@ class TradePageViewController: UIViewController {
     }
     
     func setupCurrencyLabel() {
-        let currencyLabel = UILabel()
-        currencyLabel.translatesAutoresizingMaskIntoConstraints = false
-        currencyLabel.textColor = .white
-        currencyLabel.font = UIFont.boldSystemFont(ofSize: 16)
-        currencyLabel.textAlignment = .center
-        
-        let text = "1 \(selectedCurrency ?? "") = 2,500,000 TWD"
+        guard let originalString = selectedCurrency else { return }
+        let modifiedString = originalString.replacingOccurrences(of: "-USD", with: "")
+        let text = "1 \(modifiedString ?? "") = \(instantAmount) USD"
         let attributedText = NSMutableAttributedString(string: text)
         
-        let range = (text as NSString).range(of: "2,500,000")
+        let range = (text as NSString).range(of: "\(instantAmount)")
         attributedText.addAttributes([NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 22)], range: range)
         
         currencyLabel.attributedText = attributedText
@@ -185,7 +271,7 @@ class TradePageViewController: UIViewController {
         } else {
             // 卖出模式
             tradeLimitsLabel.text = "0.00002 BTC ≤ 單筆賣出額度 ≤ 2 BTC"
-            let availableBalanceLabel = UILabel()
+//            let availableBalanceLabel = UILabel()
             availableBalanceLabel.translatesAutoresizingMaskIntoConstraints = false
             availableBalanceLabel.textColor = .black
             availableBalanceLabel.font = UIFont.systemFont(ofSize: 16)
@@ -228,6 +314,7 @@ class TradePageViewController: UIViewController {
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage(UIImage(systemName: "arrow.up.arrow.down"), for: .normal)
         button.tintColor = .black
+        button.addTarget(self, action: #selector(changeInputButton), for: .touchUpInside)
         overlayView.addSubview(button)
         
         let separatorView = UIView()
@@ -235,19 +322,23 @@ class TradePageViewController: UIViewController {
         separatorView.backgroundColor = .lightGray
         overlayView.addSubview(separatorView)
         
-        let currencyIconImageView = UIImageView(image: UIImage(named: "usdt")) // 替换为实际的币种图标
+        guard let originalString = selectedCurrency else { return }
+        let modifiedString = originalString.replacingOccurrences(of: "-USD", with: "")
+        let lowercaseString = modifiedString.lowercased()
+        let currencyIconImageView = UIImageView(image: UIImage(named: lowercaseString)) // 替换为实际的币种图标
         currencyIconImageView.translatesAutoresizingMaskIntoConstraints = false
         overlayView.addSubview(currencyIconImageView)
         
         let currencyLabel = UILabel()
         currencyLabel.translatesAutoresizingMaskIntoConstraints = false
-        currencyLabel.text = selectedCurrency // 替换为实际的币种名称
+        currencyLabel.text = modifiedString // 替换为实际的币种名称
         overlayView.addSubview(currencyLabel)
         
         let arrowButton = UIButton(type: .system)
         arrowButton.translatesAutoresizingMaskIntoConstraints = false
         arrowButton.setImage(UIImage(systemName: "arrow.down"), for: .normal)
         arrowButton.tintColor = .black
+        arrowButton.isHidden = true
         overlayView.addSubview(arrowButton)
         
         let label = UILabel()
@@ -261,21 +352,22 @@ class TradePageViewController: UIViewController {
         label.textColor = .gray
         overlayView.addSubview(label)
 
-        overlayView.addSubview(textField)
+        overlayView.addSubview(topTextField)
         
-        let bottomCurrencyIconImageView = UIImageView(image: UIImage(named: "usdt")) // 替换为实际的币种图标
+        let bottomCurrencyIconImageView = UIImageView(image: UIImage(named: "usd")) // 替换为实际的币种图标
         bottomCurrencyIconImageView.translatesAutoresizingMaskIntoConstraints = false
         overlayView.addSubview(bottomCurrencyIconImageView)
         
         let bottomCurrencyLabel = UILabel()
         bottomCurrencyLabel.translatesAutoresizingMaskIntoConstraints = false
-        bottomCurrencyLabel.text = selectedCurrency // 替换为实际的币种名称
+        bottomCurrencyLabel.text = "USD" // 替换为实际的币种名称
         overlayView.addSubview(bottomCurrencyLabel)
         
         let bottomArrowButton = UIButton(type: .system)
         bottomArrowButton.translatesAutoresizingMaskIntoConstraints = false
         bottomArrowButton.setImage(UIImage(systemName: "arrow.down"), for: .normal)
         bottomArrowButton.tintColor = .black
+        bottomArrowButton.isHidden = true
         overlayView.addSubview(bottomArrowButton)
         
         let bottomLabel = UILabel()
@@ -324,10 +416,10 @@ class TradePageViewController: UIViewController {
             label.topAnchor.constraint(equalTo: overlayView.topAnchor, constant: 16),
             bottomLabel.leadingAnchor.constraint(equalTo: overlayView.centerXAnchor,constant: -6),
             bottomLabel.bottomAnchor.constraint(equalTo: bottomTextField.topAnchor,constant: -16),
-            textField.leadingAnchor.constraint(equalTo: overlayView.centerXAnchor,constant: -8),
-            textField.trailingAnchor.constraint(equalTo: overlayView.trailingAnchor),
-            textField.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 8),
-            textField.bottomAnchor.constraint(equalTo: separatorView.topAnchor, constant: -16),
+            topTextField.leadingAnchor.constraint(equalTo: overlayView.centerXAnchor,constant: -8),
+            topTextField.trailingAnchor.constraint(equalTo: overlayView.trailingAnchor),
+            topTextField.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 8),
+            topTextField.bottomAnchor.constraint(equalTo: separatorView.topAnchor, constant: -16),
             bottomTextField.leadingAnchor.constraint(equalTo: overlayView.centerXAnchor,constant: -8),
             bottomTextField.trailingAnchor.constraint(equalTo: overlayView.trailingAnchor),
             bottomTextField.topAnchor.constraint(equalTo: bottomLabel.bottomAnchor, constant: 8),
@@ -357,19 +449,82 @@ class TradePageViewController: UIViewController {
         ])
     }
     
+    @objc func changeInputButton() {
+//        isTopTextFieldEditable = !isTopTextFieldEditable
+        
+        if isTopTextFieldEditable  == false {
+            topTextField.isUserInteractionEnabled = true
+            bottomTextField.isUserInteractionEnabled = false
+            topTextField.backgroundColor = .white
+            bottomTextField.placeholder = ""
+            topTextField.placeholder = "Enter text"
+            isTopTextFieldEditable = true
+        } else {
+            topTextField.isUserInteractionEnabled = false
+            bottomTextField.isUserInteractionEnabled = true
+            topTextField.placeholder = ""
+            bottomTextField.placeholder = "Enter text"
+            bottomTextField.backgroundColor = .white
+            isTopTextFieldEditable = false
+        }
+    }
+    
     @objc func cancelButtonTapped() {
         dismiss(animated: true, completion: nil)
     }
     
     @objc func maxButtonTapped() {
-        dismiss(animated: true, completion: nil)
+        //取得使用者該幣別的總額，並傳給textField
+        guard let availableBalance = availableBalance else { return }
+        topTextField.text = "\(availableBalance)"
+        bottomTextField.text = "\(availableBalance * buyPrice!)"
     }
     
     @objc func buyButtonTapped() {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil) // 替换为您的故事板名称
+        let stvc = storyboard.instantiateViewController(withIdentifier: "SuccessfulTransactionViewController") as? SuccessfulTransactionViewController
+        navigationController?.pushViewController(stvc!, animated: true)
         print("買東西")
     }
     
     @objc func sellButtonTapped() {
         print("賣東西")
+        let storyboard = UIStoryboard(name: "Main", bundle: nil) // 替换为您的故事板名称
+        let stvc = storyboard.instantiateViewController(withIdentifier: "SuccessfulTransactionViewController") as? SuccessfulTransactionViewController
+        navigationController?.pushViewController(stvc!, animated: true)
     }
+    
+    @objc func topTextFieldChanged(_ textField: UITextField) {
+        if let text = textField.text,let buyPrice = buyPrice,
+           let number = Double(text) {
+            let price = Double(buyPrice)
+            let calculatedValue = number * price
+            bottomTextField.text = String(format: "%.2f", calculatedValue)
+        } else {
+            bottomTextField.text = ""
+        }
+    }
+
+    @objc func bottomTextFieldChanged(_ textField: UITextField) {
+        if let text = textField.text,let buyPrice = buyPrice,
+           let number = Double(text) {
+            let calculatedValue = number / buyPrice
+            topTextField.text = String(format: "%.2f", calculatedValue)
+        } else {
+            topTextField.text = ""
+        }
+    }
+    
+    func getCurrencyBalance(accounts: [Account], productID: String) -> String? {
+        for account in accounts {
+            if account.currency == productID {
+                return account.balance
+            }
+        }
+        return nil
+    }
+}
+
+extension TradePageViewController: UITextFieldDelegate {
+    
 }

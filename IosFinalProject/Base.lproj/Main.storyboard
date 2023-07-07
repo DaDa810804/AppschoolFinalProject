@@ -112,7 +112,37 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tAQ-uQ-Em3" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2086" y="2289"/>
+            <point key="canvasLocation" x="-2011" y="2240"/>
+        </scene>
+        <!--History View Controller-->
+        <scene sceneID="Gp0-4u-XqS">
+            <objects>
+                <viewController storyboardIdentifier="HistoryViewController" id="ctl-sr-wr7" customClass="HistoryViewController" customModule="IosFinalProject" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Ycb-Bh-JwS">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="iob-va-cVR"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="5Hl-CG-qmb" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="140" y="2239"/>
+        </scene>
+        <!--Half View Controller-->
+        <scene sceneID="Wld-uN-Awt">
+            <objects>
+                <viewController storyboardIdentifier="HalfViewController" id="FOa-gA-kO4" customClass="HalfViewController" customModule="IosFinalProject" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="5Ea-Fh-gmO">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="FLB-o0-sC4"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="jHf-3e-07G" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="140" y="2948"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
@@ -190,15 +220,15 @@
             </objects>
             <point key="canvasLocation" x="-993" y="746"/>
         </scene>
-        <!--View Controller-->
+        <!--Profile View Controller-->
         <scene sceneID="9bw-g4-bwH">
             <objects>
-                <viewController id="H5h-62-HKd" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ProfileViewController" id="H5h-62-HKd" customClass="ProfileViewController" customModule="IosFinalProject" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Bdv-4n-WAn">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <viewLayoutGuide key="safeArea" id="L6d-pr-5hb"/>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <color key="backgroundColor" red="0.97280722860000002" green="0.97623950240000001" blue="0.97992938760000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
                     <navigationItem key="navigationItem" id="2i4-eo-pPD"/>
                 </viewController>
@@ -206,10 +236,10 @@
             </objects>
             <point key="canvasLocation" x="1253" y="1530"/>
         </scene>
-        <!--Tab Bar Controller-->
+        <!--My Tab Bar Controller-->
         <scene sceneID="ySU-i6-dvb">
             <objects>
-                <tabBarController automaticallyAdjustsScrollViewInsets="NO" id="4k6-qT-a7I" sceneMemberID="viewController">
+                <tabBarController storyboardIdentifier="MyTabBarController" automaticallyAdjustsScrollViewInsets="NO" id="4k6-qT-a7I" customClass="MyTabBarController" customModule="IosFinalProject" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
                     <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="us9-FX-xis">
                         <rect key="frame" x="0.0" y="0.0" width="1000" height="1000"/>
@@ -227,10 +257,10 @@
             </objects>
             <point key="canvasLocation" x="139.69465648854961" y="3.5211267605633805"/>
         </scene>
-        <!--View Controller-->
+        <!--Wallet View Controller-->
         <scene sceneID="ZhA-LJ-Nt7">
             <objects>
-                <viewController id="nFN-Of-BCu" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="WalletViewController" id="nFN-Of-BCu" customClass="WalletViewController" customModule="IosFinalProject" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="hFe-d9-ZBF">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -281,6 +311,21 @@
             </objects>
             <point key="canvasLocation" x="1253" y="746"/>
         </scene>
+        <!--Successful Transaction View Controller-->
+        <scene sceneID="4Dt-mm-ZEK">
+            <objects>
+                <viewController storyboardIdentifier="SuccessfulTransactionViewController" id="3Hs-8x-Vn6" customClass="SuccessfulTransactionViewController" customModule="IosFinalProject" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="ecu-MY-sHJ">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="16s-2P-wkj"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ipn-Y0-Yga" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-4175" y="2239"/>
+        </scene>
         <!--Trade Page View Controller-->
         <scene sceneID="afT-7r-4vr">
             <objects>
@@ -295,7 +340,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ehD-zP-ljT" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-3106" y="2289"/>
+            <point key="canvasLocation" x="-3137" y="2239"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="JOt-TY-nmW">
@@ -313,7 +358,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="68E-4O-dag" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2086.2595419847326" y="1529.5774647887324"/>
+            <point key="canvasLocation" x="-2011" y="1530"/>
         </scene>
     </scenes>
     <resources>

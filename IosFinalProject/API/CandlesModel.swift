@@ -15,3 +15,4 @@ struct Candles {
     let close: Double
     let volume: Double
 }
+

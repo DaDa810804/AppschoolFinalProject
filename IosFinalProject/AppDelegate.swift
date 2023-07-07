@@ -19,9 +19,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             let fontSize: CGFloat = 18.0
             let font = UIFont.systemFont(ofSize: fontSize)
             appearance.configureWithOpaqueBackground()
-            appearance.backgroundColor = UIColor.myRed.withAlphaComponent(0.9)
+            appearance.backgroundColor = UIColor.myRed
             appearance.titleTextAttributes = [.foregroundColor: UIColor.white]
-            
+
             appearance.titlePositionAdjustment = UIOffset(horizontal: -70, vertical: 0) // 将标题文字向左偏移
 
             UINavigationBar.appearance().tintColor = .white

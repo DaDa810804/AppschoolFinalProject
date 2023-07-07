@@ -37,7 +37,14 @@
 		7217FB1A2A5193C300A9DA85 /* FucnAdd.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7217FB192A5193C300A9DA85 /* FucnAdd.swift */; };
 		72E921B02A52C7640049A08E /* WebsocketService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72E921AF2A52C7640049A08E /* WebsocketService.swift */; };
 		72E921B22A52F4170049A08E /* CandlesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72E921B12A52F4170049A08E /* CandlesModel.swift */; };
-		72E921B42A5429480049A08E /* AllDataAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72E921B32A5429480049A08E /* AllDataAPI.swift */; };
+		72E921B72A5568C60049A08E /* SuccessfulTransactionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72E921B62A5568C60049A08E /* SuccessfulTransactionViewController.swift */; };
+		72E921B92A5659BA0049A08E /* WalletViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72E921B82A5659BA0049A08E /* WalletViewController.swift */; };
+		72E921BB2A567F680049A08E /* WalletTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72E921BA2A567F680049A08E /* WalletTableViewCell.swift */; };
+		72E921BD2A5686DB0049A08E /* HistoryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72E921BC2A5686DB0049A08E /* HistoryViewController.swift */; };
+		72E921C12A569CE30049A08E /* HalfViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72E921C02A569CE30049A08E /* HalfViewController.swift */; };
+		72E921C32A569F260049A08E /* SwitchCurrencyTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72E921C22A569F260049A08E /* SwitchCurrencyTableViewCell.swift */; };
+		72E921C62A56A45C0049A08E /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72E921C52A56A45C0049A08E /* ProfileViewController.swift */; };
+		72E921C82A56EE2E0049A08E /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72E921C72A56EE2E0049A08E /* UIImage.swift */; };
 		D7520B3D87E8ACAEF09C1FDF /* Pods_IosFinalProject.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 458CB4B3930412546970998D /* Pods_IosFinalProject.framework */; };
 /* End PBXBuildFile section */
 
@@ -75,7 +82,14 @@
 		7217FB192A5193C300A9DA85 /* FucnAdd.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FucnAdd.swift; sourceTree = "<group>"; };
 		72E921AF2A52C7640049A08E /* WebsocketService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WebsocketService.swift; sourceTree = "<group>"; };
 		72E921B12A52F4170049A08E /* CandlesModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CandlesModel.swift; sourceTree = "<group>"; };
-		72E921B32A5429480049A08E /* AllDataAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AllDataAPI.swift; sourceTree = "<group>"; };
+		72E921B62A5568C60049A08E /* SuccessfulTransactionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessfulTransactionViewController.swift; sourceTree = "<group>"; };
+		72E921B82A5659BA0049A08E /* WalletViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletViewController.swift; sourceTree = "<group>"; };
+		72E921BA2A567F680049A08E /* WalletTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletTableViewCell.swift; sourceTree = "<group>"; };
+		72E921BC2A5686DB0049A08E /* HistoryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoryViewController.swift; sourceTree = "<group>"; };
+		72E921C02A569CE30049A08E /* HalfViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HalfViewController.swift; sourceTree = "<group>"; };
+		72E921C22A569F260049A08E /* SwitchCurrencyTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchCurrencyTableViewCell.swift; sourceTree = "<group>"; };
+		72E921C52A56A45C0049A08E /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		72E921C72A56EE2E0049A08E /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
 		C882CD4986214B00E46E86F2 /* Pods-IosFinalProject.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IosFinalProject.debug.xcconfig"; path = "Target Support Files/Pods-IosFinalProject/Pods-IosFinalProject.debug.xcconfig"; sourceTree = "<group>"; };
 		D825DEFFA12F28383E30E5D9 /* Pods-IosFinalProject.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IosFinalProject.release.xcconfig"; path = "Target Support Files/Pods-IosFinalProject/Pods-IosFinalProject.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -122,10 +136,12 @@
 		7217FAAA2A4C1FAF00A9DA85 /* IosFinalProject */ = {
 			isa = PBXGroup;
 			children = (
+				72E921C42A56A41D0049A08E /* ProfilePage */,
+				72E921B52A5564CB0049A08E /* TradePage */,
 				7217FB0A2A4EF8F700A9DA85 /* extension */,
 				7217FB012A4EAA5A00A9DA85 /* DetailPage */,
 				7217FAFB2A4E72FE00A9DA85 /* FrontPage */,
-				7217FAFC2A4E73AB00A9DA85 /* SecondPage  */,
+				7217FAFC2A4E73AB00A9DA85 /* WalletPage  */,
 				7217FAF02A4DC40300A9DA85 /* API */,
 				7217FAAB2A4C1FAF00A9DA85 /* AppDelegate.swift */,
 				7217FAAD2A4C1FAF00A9DA85 /* SceneDelegate.swift */,
@@ -134,7 +150,6 @@
 				7217FAB92A4C1FB100A9DA85 /* LaunchScreen.storyboard */,
 				7217FABC2A4C1FB100A9DA85 /* Info.plist */,
 				7217FAB42A4C1FAF00A9DA85 /* IosFinalProject.xcdatamodeld */,
-				7217FB0D2A4F06AE00A9DA85 /* TradePageViewController.swift */,
 			);
 			path = IosFinalProject;
 			sourceTree = "<group>";
@@ -153,7 +168,6 @@
 				7217FB172A51543300A9DA85 /* USDToTWD.swift */,
 				72E921AF2A52C7640049A08E /* WebsocketService.swift */,
 				72E921B12A52F4170049A08E /* CandlesModel.swift */,
-				72E921B32A5429480049A08E /* AllDataAPI.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -169,11 +183,16 @@
 			path = FrontPage;
 			sourceTree = "<group>";
 		};
-		7217FAFC2A4E73AB00A9DA85 /* SecondPage  */ = {
+		7217FAFC2A4E73AB00A9DA85 /* WalletPage  */ = {
 			isa = PBXGroup;
 			children = (
+				72E921B82A5659BA0049A08E /* WalletViewController.swift */,
+				72E921BA2A567F680049A08E /* WalletTableViewCell.swift */,
+				72E921BC2A5686DB0049A08E /* HistoryViewController.swift */,
+				72E921C02A569CE30049A08E /* HalfViewController.swift */,
+				72E921C22A569F260049A08E /* SwitchCurrencyTableViewCell.swift */,
 			);
-			path = "SecondPage ";
+			path = "WalletPage ";
 			sourceTree = "<group>";
 		};
 		7217FB012A4EAA5A00A9DA85 /* DetailPage */ = {
@@ -194,8 +213,26 @@
 				7217FB0B2A4EF91600A9DA85 /* Color.swift */,
 				7217FB152A513C5900A9DA85 /* AboutCharts.swift */,
 				7217FB192A5193C300A9DA85 /* FucnAdd.swift */,
+				72E921C72A56EE2E0049A08E /* UIImage.swift */,
 			);
 			path = extension;
+			sourceTree = "<group>";
+		};
+		72E921B52A5564CB0049A08E /* TradePage */ = {
+			isa = PBXGroup;
+			children = (
+				7217FB0D2A4F06AE00A9DA85 /* TradePageViewController.swift */,
+				72E921B62A5568C60049A08E /* SuccessfulTransactionViewController.swift */,
+			);
+			path = TradePage;
+			sourceTree = "<group>";
+		};
+		72E921C42A56A41D0049A08E /* ProfilePage */ = {
+			isa = PBXGroup;
+			children = (
+				72E921C52A56A45C0049A08E /* ProfileViewController.swift */,
+			);
+			path = ProfilePage;
 			sourceTree = "<group>";
 		};
 		A1DFC913F4CED24E5CE83720 /* Frameworks */ = {
@@ -340,28 +377,35 @@
 			buildActionMask = 2147483647;
 			files = (
 				7217FAC62A4C360900A9DA85 /* APIManeger.swift in Sources */,
+				72E921BD2A5686DB0049A08E /* HistoryViewController.swift in Sources */,
 				7217FB052A4EAAC300A9DA85 /* ChartsTableViewCell.swift in Sources */,
 				7217FB162A513C5900A9DA85 /* AboutCharts.swift in Sources */,
 				7217FB182A51543300A9DA85 /* USDToTWD.swift in Sources */,
+				72E921C32A569F260049A08E /* SwitchCurrencyTableViewCell.swift in Sources */,
 				7217FAF72A4DC55A00A9DA85 /* ProductsModel.swift in Sources */,
 				7217FB002A4E9E5000A9DA85 /* ProductDetailViewController.swift in Sources */,
 				7217FB072A4EAAD800A9DA85 /* TradeTableViewCell.swift in Sources */,
 				7217FAB62A4C1FAF00A9DA85 /* IosFinalProject.xcdatamodeld in Sources */,
-				72E921B42A5429480049A08E /* AllDataAPI.swift in Sources */,
 				7217FAB02A4C1FAF00A9DA85 /* ViewController.swift in Sources */,
 				7217FAFA2A4DC55A00A9DA85 /* ProductCandles.swift in Sources */,
 				7217FACE2A4C652000A9DA85 /* SecondTableViewCell.swift in Sources */,
 				7217FACA2A4C64F500A9DA85 /* ImageTableViewCell.swift in Sources */,
+				72E921C12A569CE30049A08E /* HalfViewController.swift in Sources */,
 				7217FB122A50315700A9DA85 /* OrderModel.swift in Sources */,
 				7217FAF62A4DC55A00A9DA85 /* ProductStatsModel.swift in Sources */,
 				7217FB1A2A5193C300A9DA85 /* FucnAdd.swift in Sources */,
 				7217FB032A4EAAA500A9DA85 /* PriceTableViewCell.swift in Sources */,
 				7217FAF92A4DC55A00A9DA85 /* ProfileModel.swift in Sources */,
 				7217FB0C2A4EF91600A9DA85 /* Color.swift in Sources */,
+				72E921C82A56EE2E0049A08E /* UIImage.swift in Sources */,
 				7217FAAC2A4C1FAF00A9DA85 /* AppDelegate.swift in Sources */,
 				7217FAF82A4DC55A00A9DA85 /* AccountModel.swift in Sources */,
 				72E921B22A52F4170049A08E /* CandlesModel.swift in Sources */,
+				72E921C62A56A45C0049A08E /* ProfileViewController.swift in Sources */,
+				72E921B72A5568C60049A08E /* SuccessfulTransactionViewController.swift in Sources */,
 				7217FB0E2A4F06AE00A9DA85 /* TradePageViewController.swift in Sources */,
+				72E921B92A5659BA0049A08E /* WalletViewController.swift in Sources */,
+				72E921BB2A567F680049A08E /* WalletTableViewCell.swift in Sources */,
 				7217FAAE2A4C1FAF00A9DA85 /* SceneDelegate.swift in Sources */,
 				7217FACC2A4C650800A9DA85 /* ThirdTableViewCell.swift in Sources */,
 				7217FAEE2A4DC2F200A9DA85 /* CurrenciesModel.swift in Sources */,
