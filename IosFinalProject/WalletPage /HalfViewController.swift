@@ -13,10 +13,10 @@ protocol HalfViewControllerDelegate: AnyObject {
 
 class HalfViewController: UIViewController {
     
+    var userWalletAllCurrency: [String] = []
     weak var delegate: HalfViewControllerDelegate?
     var selectedIndexPath: IndexPath?
-    var currencyData = ["所有幣種","BTC","USDT","LINK"]
-    var imageData = ["red","btc","usdt","link"]
+
     let backButton: UIButton = {
         let backButton = UIButton(type: .system)
         backButton.translatesAutoresizingMaskIntoConstraints = false
@@ -52,9 +52,9 @@ class HalfViewController: UIViewController {
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        if let selectedIndexPath = selectedIndexPath {
-            switchCurrencyTableView.selectRow(at: selectedIndexPath, animated: false, scrollPosition: .none)
-            switchCurrencyTableView.cellForRow(at: selectedIndexPath)?.accessoryType = .checkmark
+        userWalletAllCurrency.insert("所有幣種", at: 0)
+        if let savedIndexPathRow = UserDefaults.standard.value(forKey: "SelectedCurrencyIndexPath") as? Int {
+            selectedIndexPath = IndexPath(row: savedIndexPathRow, section: 0)
         }
     }
     func setupUI() {
@@ -82,31 +82,28 @@ class HalfViewController: UIViewController {
 
 extension HalfViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return currencyData.count
+        return userWalletAllCurrency.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = switchCurrencyTableView.dequeueReusableCell(withIdentifier: "SwitchCurrencyTableViewCell", for: indexPath) as? SwitchCurrencyTableViewCell
         cell?.setupUI()
-        cell?.currencyLabel.text = "\(currencyData[indexPath.row])"
-        cell?.iconImageView.image = UIImage(named: imageData[indexPath.row])
+        cell?.currencyLabel.text = "\(userWalletAllCurrency[indexPath.row])"
+        cell?.configure(with: userWalletAllCurrency[indexPath.row])
+        if indexPath == selectedIndexPath {
+            cell?.accessoryType = .checkmark
+            cell?.tintColor = UIColor.black
+        } else {
+            cell?.accessoryType = .none
+        }
         return cell!
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let selectedIndexPath = selectedIndexPath {
-            let selectedCell = tableView.cellForRow(at: selectedIndexPath)
-            selectedCell?.accessoryType = .none
-        }
         //選中的字串
-        let selectedCurrency = currencyData[indexPath.row]
+        let selectedCurrency = userWalletAllCurrency[indexPath.row]
         delegate?.didSelectCurrency(selectedCurrency)
-        // 设置当前选中的单元格的勾号
-        let cell = tableView.cellForRow(at: indexPath)
-        cell?.accessoryType = .checkmark
-        selectedIndexPath = indexPath
+        UserDefaults.standard.set(indexPath.row, forKey: "SelectedCurrencyIndexPath")
         dismiss(animated: true)
-        // 更新选中IndexPath
-        
     }
 }

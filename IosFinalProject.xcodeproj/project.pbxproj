@@ -45,6 +45,7 @@
 		72E921C32A569F260049A08E /* SwitchCurrencyTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72E921C22A569F260049A08E /* SwitchCurrencyTableViewCell.swift */; };
 		72E921C62A56A45C0049A08E /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72E921C52A56A45C0049A08E /* ProfileViewController.swift */; };
 		72E921C82A56EE2E0049A08E /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72E921C72A56EE2E0049A08E /* UIImage.swift */; };
+		72E921CA2A57E6FF0049A08E /* EmptyStateView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72E921C92A57E6FF0049A08E /* EmptyStateView.swift */; };
 		D7520B3D87E8ACAEF09C1FDF /* Pods_IosFinalProject.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 458CB4B3930412546970998D /* Pods_IosFinalProject.framework */; };
 /* End PBXBuildFile section */
 
@@ -90,6 +91,7 @@
 		72E921C22A569F260049A08E /* SwitchCurrencyTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchCurrencyTableViewCell.swift; sourceTree = "<group>"; };
 		72E921C52A56A45C0049A08E /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		72E921C72A56EE2E0049A08E /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
+		72E921C92A57E6FF0049A08E /* EmptyStateView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyStateView.swift; sourceTree = "<group>"; };
 		C882CD4986214B00E46E86F2 /* Pods-IosFinalProject.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IosFinalProject.debug.xcconfig"; path = "Target Support Files/Pods-IosFinalProject/Pods-IosFinalProject.debug.xcconfig"; sourceTree = "<group>"; };
 		D825DEFFA12F28383E30E5D9 /* Pods-IosFinalProject.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-IosFinalProject.release.xcconfig"; path = "Target Support Files/Pods-IosFinalProject/Pods-IosFinalProject.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -214,6 +216,7 @@
 				7217FB152A513C5900A9DA85 /* AboutCharts.swift */,
 				7217FB192A5193C300A9DA85 /* FucnAdd.swift */,
 				72E921C72A56EE2E0049A08E /* UIImage.swift */,
+				72E921C92A57E6FF0049A08E /* EmptyStateView.swift */,
 			);
 			path = extension;
 			sourceTree = "<group>";
@@ -401,6 +404,7 @@
 				7217FAAC2A4C1FAF00A9DA85 /* AppDelegate.swift in Sources */,
 				7217FAF82A4DC55A00A9DA85 /* AccountModel.swift in Sources */,
 				72E921B22A52F4170049A08E /* CandlesModel.swift in Sources */,
+				72E921CA2A57E6FF0049A08E /* EmptyStateView.swift in Sources */,
 				72E921C62A56A45C0049A08E /* ProfileViewController.swift in Sources */,
 				72E921B72A5568C60049A08E /* SuccessfulTransactionViewController.swift in Sources */,
 				7217FB0E2A4F06AE00A9DA85 /* TradePageViewController.swift in Sources */,

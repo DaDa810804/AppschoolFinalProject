@@ -198,6 +198,8 @@ class WalletViewController: UIViewController {
         //去資產紀錄
         let storyboard = UIStoryboard(name: "Main", bundle: nil) // 替换为您的故事板名称
         let hvc = storyboard.instantiateViewController(withIdentifier: "HistoryViewController") as? HistoryViewController
+        //把錢包的所有幣別傳過去
+        hvc?.userWalletAllCurrency = userWalletAllCurrency
         navigationController?.pushViewController(hvc!, animated: true)
     }
     

@@ -159,15 +159,13 @@ extension ProductDetailViewController: UITableViewDelegate, UITableViewDataSourc
             tradeCell.setupUI()
             let order = ordersArray[indexPath.row - 3]
             let side = order.side
+            let modifiedString = order.productId.replacingOccurrences(of: "-USD", with: "")
             tradeCell.setTopLabelViewText("\(side)")
-            tradeCell.setTopLabel2Text("\(timeChange(dateString: order.doneAt))")
-            let originalString = order.productID
-            let modifiedString = originalString.replacingOccurrences(of: "-USD", with: "")
-            
+            tradeCell.setTopLabel2Text("\(timeChange(dateString: order.doneAt!))")
             tradeCell.setMiddleLabel1Text("\(side) \(modifiedString)")
             tradeCell.setMiddleLabel2Text("\(order.size)")
             tradeCell.setBottomLabel1Text("\(order.status)")
-//            tradeCell.setBottomLabel2Text("\(order.price)")
+            tradeCell.setBottomLabel2Text("\(order.executedValue)")
             return tradeCell
         }
     }

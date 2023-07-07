@@ -9,6 +9,7 @@ import UIKit
 
 class HistoryViewController: UIViewController {
     
+    var userWalletAllCurrency: [String] = []
     var ordersData: [Order] = []
     let backButton: UIButton = {
         let backButton = UIButton(type: .system)
@@ -63,6 +64,8 @@ class HistoryViewController: UIViewController {
         return tableView
     }()
     
+    let emptyView = EmptyStateView()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         setupUI()
@@ -96,17 +99,20 @@ class HistoryViewController: UIViewController {
         if let sheetPresentationController = hvc!.sheetPresentationController {
             sheetPresentationController.detents = [.medium()]
         }
+        hvc?.userWalletAllCurrency = userWalletAllCurrency
         hvc!.delegate = self
         present(hvc!, animated: true)
     }
-    
+        
     func setupUI() {
+        emptyView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(backButton)
         view.addSubview(topLabel)
         view.addSubview(allCurrencyLabel)
         view.addSubview(switchCurrencyButton)
         view.addSubview(separatorView)
         view.addSubview(historyTableView)
+        view.addSubview(emptyView)
         
         NSLayoutConstraint.activate([
             backButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -129,8 +135,14 @@ class HistoryViewController: UIViewController {
             historyTableView.topAnchor.constraint(equalTo: separatorView.bottomAnchor),
             historyTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             historyTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            historyTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
+            historyTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            
+            emptyView.topAnchor.constraint(equalTo: historyTableView.topAnchor),
+            emptyView.leadingAnchor.constraint(equalTo: historyTableView.leadingAnchor),
+            emptyView.trailingAnchor.constraint(equalTo: historyTableView.trailingAnchor),
+            emptyView.bottomAnchor.constraint(equalTo: historyTableView.bottomAnchor)
         ])
+        emptyView.isHidden = true
     }
 }
 
@@ -144,13 +156,14 @@ extension HistoryViewController: UITableViewDelegate, UITableViewDataSource {
         let order = ordersData[indexPath.row]
         cell?.setupUI()
         cell?.setTopLabelViewText(order.side)
-        cell?.setTopLabel2Text("\(timeChange(dateString: order.doneAt))")
-        let originalString = order.productID
+        cell?.setTopLabel2Text("\(timeChange(dateString: order.doneAt!))")
+        let originalString = order.productId
         let modifiedString = originalString.replacingOccurrences(of: "-USD", with: "")
         
         cell?.setMiddleLabel1Text("\(order.side) \(modifiedString)")
         cell?.setMiddleLabel2Text("\(order.size)")
         cell?.setBottomLabel1Text("\(order.status)")
+        cell?.setBottomLabel2Text("\(order.executedValue)")
         return cell!
     }
     
@@ -158,6 +171,7 @@ extension HistoryViewController: UITableViewDelegate, UITableViewDataSource {
         let storyboard = UIStoryboard(name: "Main", bundle: nil) // 替换为您的故事板名称
         let stvc = storyboard.instantiateViewController(withIdentifier: "SuccessfulTransactionViewController") as? SuccessfulTransactionViewController
         stvc?.bottomButton.isHidden = true
+        stvc?.orderData = ordersData[indexPath.row]
         navigationController?.pushViewController(stvc!, animated: true)
     }
     
@@ -172,6 +186,7 @@ extension HistoryViewController: HalfViewControllerDelegate {
                 guard let orders = orders else { return }
                 self.ordersData = orders
                 DispatchQueue.main.async {
+                    self.emptyView.isHidden = true
                     self.allCurrencyLabel.text = "全部幣別"
                     self.historyTableView.reloadData()
                 }
@@ -180,9 +195,23 @@ extension HistoryViewController: HalfViewControllerDelegate {
             DispatchQueue.main.async {
                 self.allCurrencyLabel.text = currency
                 ApiManager.shared.getOrders(productId: "\(currency)-USD") { order in
-                    self.ordersData = order!
-                    DispatchQueue.main.async {
-                        self.historyTableView.reloadData()
+                    if let order = order {
+                        self.ordersData = order
+                        if self.ordersData.isEmpty == true {
+                            DispatchQueue.main.async {
+                                self.emptyView.isHidden = false
+                            }
+                        } else {
+                            DispatchQueue.main.async {
+                                self.emptyView.isHidden = true
+                                self.historyTableView.reloadData()
+                            }
+                        }
+                    } else {
+                        print("沒資料")
+                        DispatchQueue.main.async {
+                            self.emptyView.isHidden = false
+                        }
                     }
                 }
             }

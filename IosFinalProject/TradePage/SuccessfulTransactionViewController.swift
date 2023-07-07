@@ -9,6 +9,8 @@ import UIKit
 
 class SuccessfulTransactionViewController: UIViewController {
     
+    var orderData: Order?
+    
     let redView: UIView = {
         let view = UIView()
         view.translatesAutoresizingMaskIntoConstraints = false
@@ -231,7 +233,18 @@ class SuccessfulTransactionViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        guard let order = orderData else { return }
+        let originalString = order.productId
+        let modifiedString = originalString.replacingOccurrences(of: "-USD", with: "")
+        let unit = (Double(order.executedValue)! - Double(order.fillFees)!) / Double(order.size)!
+        setTopLabelViewText(order.side)
+        howManyLabel.text = "\(order.size) \(modifiedString)"
+        orderTimeRightLabel.text = timeChange(dateString: order.createdAt)
+        updateTimeRightLabel.text = timeChange(dateString: (order.doneAt)!)
+        unitPriceRightLabel.text = "USD$ \(String(format: "%.2f", unit))"
+        amountsPayableRightLabel.text = "USD$ \(String(format: "%.2f", Double(order.executedValue)!))"
     }
+    
     func setBackgroudView() {
         view.addSubview(redView)
         view.addSubview(grayView)
@@ -365,6 +378,12 @@ class SuccessfulTransactionViewController: UIViewController {
             UIView.animate(withDuration: 1, animations: {}) { _ in
                 self.dismiss(animated: false, completion: nil)
             }
+        }
+    }
+    
+    func setTopLabelViewText(_ text: String) {
+        if let label = stateLabelView.subviews.compactMap({ $0 as? UILabel }).first {
+            label.text = text
         }
     }
 }

@@ -49,7 +49,17 @@ class ViewController: UIViewController {
         moneyLabel.text = "NT$\(inputNumber!)"
         myTableView.contentInsetAdjustmentBehavior = .never
         addOverlayView()
-        //Account、Product、ProductStats
+        
+        //買賣的訂單建立
+//        ApiManager.shared.creatOrder(size: "0.0003", side: "buy", productId: "BTC-USD") { asdasdas in
+//            print("asdasdasasdasdas\(asdasdas)")
+//        }
+        
+        //單筆訂單抓取
+//        let aaaaa = "a3b766bb-1a2d-406b-9fc8-58c5b831ff3f"
+//        ApiManager.shared.getOrderForId(id: aaaaa) { aaaaaaa in
+//            print("aaaaaaaaaaaaaaa\(aaaaaaa)")
+//        }
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -62,18 +72,31 @@ class ViewController: UIViewController {
             }
         }
         
+//        ApiManager.shared.getAccounts { accounts in
+//            guard let balance = self.getUSDBalance(accounts: accounts) else { return }
+//            getExchangeRate() { (exchangeRate) in
+//                if let exchangeRate = exchangeRate {
+//                    let twdAmount = (Double(balance) ?? 0.0) * exchangeRate
+//                    DispatchQueue.main.async {
+//                        self.moneyLabel.text = "NT$ \(Int(twdAmount))"
+//                        self.inputNumber = Int(twdAmount)
+//                    }
+//                    print("\(balance) USD = \(twdAmount) TWD")
+//                } else {
+//                    print("無法獲取匯率資料")
+//                }
+//            }
+//        }
         ApiManager.shared.getAccounts { accounts in
-            guard let balance = self.getUSDBalance(accounts: accounts) else { return }
-            getExchangeRate() { (exchangeRate) in
-                if let exchangeRate = exchangeRate {
-                    let twdAmount = (Double(balance) ?? 0.0) * exchangeRate
+            self.getBalance(accounts: accounts) { balance in
+                if let number = Double(balance) {
+                    let integerValue = Int64(number)
                     DispatchQueue.main.async {
-                        self.moneyLabel.text = "NT$ \(Int(twdAmount))"
-                        self.inputNumber = Int(twdAmount)
+                        self.moneyLabel.text = "NT$ \(integerValue)"
+                        self.inputNumber = Int(integerValue)
                     }
-                    print("\(balance) USD = \(twdAmount) TWD")
                 } else {
-                    print("無法獲取匯率資料")
+                    print("無法將字串轉換為數字")
                 }
             }
         }
@@ -91,6 +114,31 @@ class ViewController: UIViewController {
         }
         return nil
     }
+    
+    func getBalance(accounts: [Account], completion: @escaping (String) -> Void) {
+        let queue = DispatchQueue(label: "balanceQueue")
+        let group = DispatchGroup()
+        var ntBalance = 0.0
+        
+        for account in accounts {
+            group.enter()
+            queue.async {
+                getExchangeRateToCurrency(currency: account.currency) { (exchangeRate) in
+                    if let exchangeRate = exchangeRate {
+                        let twdAmount = (Double(account.balance) ?? 0.0) * exchangeRate
+                        ntBalance += twdAmount
+                        print("多少\(twdAmount) TWD")
+                    }
+                    group.leave()
+                }
+            }
+        }
+        
+        group.notify(queue: queue) {
+            completion(String(ntBalance))
+        }
+    }
+
     
     func addOverlayView() {
         guard !isOverlayViewAdded, let cell = myTableView.cellForRow(at: IndexPath(row: 0, section: 0)) else { return }
