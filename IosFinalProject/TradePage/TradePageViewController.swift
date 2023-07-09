@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import IQKeyboardManagerSwift
 
 class TradePageViewController: UIViewController {
     var realTimeDataHandler: (([String]) -> Void)?
@@ -22,7 +23,7 @@ class TradePageViewController: UIViewController {
                 //上方文字輸入匡可以編輯
                 if let text = topTextField.text, let buyPrice = buyPrice, let number = Double(text) {
                     let calculatedValue = number * buyPrice
-                    bottomTextField.text = String(format: "%.2f", calculatedValue)
+                    bottomTextField.text = String(format: "%.6f", calculatedValue)
                 } else {
                     bottomTextField.text = ""
                 }
@@ -30,7 +31,7 @@ class TradePageViewController: UIViewController {
                 //下方文字輸入匡可以編輯
                 if let text = bottomTextField.text,let buyPrice = buyPrice, let number = Double(text) {
                     let calculatedValue = number / buyPrice
-                    topTextField.text = String(format: "%.2f", calculatedValue)
+                    topTextField.text = String(format: "%.6f", calculatedValue)
                 } else {
                     topTextField.text = ""
                 }
@@ -104,6 +105,10 @@ class TradePageViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        bottomTextField.keyboardType = .decimalPad
+        bottomTextField.returnKeyType = .done
+        topTextField.keyboardType = .decimalPad
+        topTextField.returnKeyType = .done
         bottomTextField.isUserInteractionEnabled = false
         bottomTextField.placeholder = ""
         topTextField.addTarget(self, action: #selector(topTextFieldChanged(_:)), for: .editingChanged)
@@ -481,17 +486,43 @@ class TradePageViewController: UIViewController {
     }
     
     @objc func buyButtonTapped() {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil) // 替换为您的故事板名称
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let stvc = storyboard.instantiateViewController(withIdentifier: "SuccessfulTransactionViewController") as? SuccessfulTransactionViewController
-        navigationController?.pushViewController(stvc!, animated: true)
-        print("買東西")
+        if topTextField.text != "" {
+            ApiManager.shared.creatOrder(size: "0.0003", side: "buy", productId: selectedCurrency!) {
+                responseOrder in
+                guard let orderID = responseOrder?.id else { return }
+                ApiManager.shared.getOrderForId(id: orderID) { order in
+                    stvc?.orderData = order
+                    DispatchQueue.main.async {
+                        self.navigationController?.pushViewController(stvc!, animated: true)
+                    }
+                }
+            }
+            print("買東西")
+        } else {
+            print("顯示警告控制器")
+        }
     }
     
     @objc func sellButtonTapped() {
-        print("賣東西")
         let storyboard = UIStoryboard(name: "Main", bundle: nil) // 替换为您的故事板名称
         let stvc = storyboard.instantiateViewController(withIdentifier: "SuccessfulTransactionViewController") as? SuccessfulTransactionViewController
-        navigationController?.pushViewController(stvc!, animated: true)
+        if topTextField.text != "" {
+            ApiManager.shared.creatOrder(size: "0.0003", side: "sell", productId: selectedCurrency!) {
+                responseOrder in
+                guard let orderID = responseOrder?.id else { return }
+                ApiManager.shared.getOrderForId(id: orderID) { order in
+                    stvc?.orderData = order
+                    DispatchQueue.main.async {
+                        self.navigationController?.pushViewController(stvc!, animated: true)
+                    }
+                }
+            }
+            print("賣東西")
+        } else {
+            print("顯示警告控制器")
+        }
     }
     
     @objc func topTextFieldChanged(_ textField: UITextField) {
@@ -499,7 +530,7 @@ class TradePageViewController: UIViewController {
            let number = Double(text) {
             let price = Double(buyPrice)
             let calculatedValue = number * price
-            bottomTextField.text = String(format: "%.2f", calculatedValue)
+            bottomTextField.text = String(format: "%.6f", calculatedValue)
         } else {
             bottomTextField.text = ""
         }
@@ -509,7 +540,7 @@ class TradePageViewController: UIViewController {
         if let text = textField.text,let buyPrice = buyPrice,
            let number = Double(text) {
             let calculatedValue = number / buyPrice
-            topTextField.text = String(format: "%.2f", calculatedValue)
+            topTextField.text = String(format: "%.6f", calculatedValue)
         } else {
             topTextField.text = ""
         }
@@ -526,5 +557,8 @@ class TradePageViewController: UIViewController {
 }
 
 extension TradePageViewController: UITextFieldDelegate {
-    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        textField.resignFirstResponder() // 關閉鍵盤
+        return true
+    }
 }

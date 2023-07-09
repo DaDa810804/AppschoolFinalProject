@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import MJRefresh
 
 class WalletViewController: UIViewController {
     
@@ -101,6 +102,21 @@ class WalletViewController: UIViewController {
         walletTableView.delegate = self
         walletTableView.register(WalletTableViewCell.self, forCellReuseIdentifier: "WalletTableViewCell")
         setupUI()
+        let refreshControl = MJRefreshNormalHeader()
+        refreshControl.setTitle("下拉刷新", for: .idle)
+        refreshControl.setTitle("釋放更新", for: .pulling)
+        refreshControl.setTitle("正在刷新...", for: .refreshing)
+
+        // 設置下拉刷新的回調方法
+        refreshControl.refreshingBlock = { [weak self] in
+            // 在這裡執行下拉刷新時的操作
+            // 例如重新加載數據、獲取最新數據等
+            // 完成後，使用 refreshControl.endRefreshing() 結束刷新
+            self?.loadData()
+        }
+
+        // 設置下拉刷新控制項
+        walletTableView.mj_header = refreshControl
     }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -116,6 +132,27 @@ class WalletViewController: UIViewController {
                         self.showBalanceLabel.text = "NT$ \(Int(twdAmount))"
                         self.inputNumber = Int(twdAmount)
                         self.walletTableView.reloadData()
+                    }
+                    print("\(balance) USD = \(twdAmount) TWD")
+                } else {
+                    print("無法獲取匯率資料")
+                }
+            }
+        }
+    }
+    
+    func loadData() {
+        ApiManager.shared.getAccounts { accounts in
+            self.userWalletAllCurrency = self.getCurrencies(accounts: accounts)
+            guard let balance = self.getBalance(accounts: accounts) else { return }
+            getExchangeRate() { (exchangeRate) in
+                if let exchangeRate = exchangeRate {
+                    let twdAmount = (Double(balance) ?? 0.0) * exchangeRate
+                    DispatchQueue.main.async {
+                        self.showBalanceLabel.text = "NT$ \(Int(twdAmount))"
+                        self.inputNumber = Int(twdAmount)
+                        self.walletTableView.reloadData()
+                        self.walletTableView.mj_header?.endRefreshing()
                     }
                     print("\(balance) USD = \(twdAmount) TWD")
                 } else {

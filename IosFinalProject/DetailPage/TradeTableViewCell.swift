@@ -95,7 +95,7 @@ class TradeTableViewCell: UITableViewCell {
     let bottomLabel1: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.text = "成功"
+        label.text = (label.text == "done") ? "成功" : label.text
         label.textAlignment = .left
         label.font = UIFont.systemFont(ofSize: 14)
         // 设置上面第二个标签的样式、内容等

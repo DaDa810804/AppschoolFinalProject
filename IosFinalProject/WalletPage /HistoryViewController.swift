@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import MJRefresh
 
 class HistoryViewController: UIViewController {
     
@@ -72,7 +73,21 @@ class HistoryViewController: UIViewController {
         historyTableView.dataSource = self
         historyTableView.delegate = self
         historyTableView.register(TradeTableViewCell.self, forCellReuseIdentifier: "TradeTableViewCell")
-        
+        let refreshControl = MJRefreshNormalHeader()
+        refreshControl.setTitle("下拉刷新", for: .idle)
+        refreshControl.setTitle("釋放更新", for: .pulling)
+        refreshControl.setTitle("正在刷新...", for: .refreshing)
+
+        // 設置下拉刷新的回調方法
+        refreshControl.refreshingBlock = { [weak self] in
+            // 在這裡執行下拉刷新時的操作
+            // 例如重新加載數據、獲取最新數據等
+            // 完成後，使用 refreshControl.endRefreshing() 結束刷新
+            self?.loadData()
+        }
+
+        // 設置下拉刷新控制項
+        historyTableView.mj_header = refreshControl
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -86,6 +101,54 @@ class HistoryViewController: UIViewController {
                 self.historyTableView.reloadData()
             }
         }
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        let indexPath = IndexPath(row: 0, section: 0)
+        UserDefaults.standard.set(indexPath.row, forKey: "SelectedCurrencyIndexPath")
+    }
+    
+    func loadData() {
+        if allCurrencyLabel.text == "全部幣別" {
+            print("打100筆")
+            ApiManager.shared.getOneHundredOrders { orders in
+                guard let orders = orders else { return }
+                self.ordersData = orders
+                DispatchQueue.main.async {
+                    self.historyTableView.reloadData()
+                    self.historyTableView.mj_header?.endRefreshing()
+                }
+            }
+        } else {
+            guard let currency = allCurrencyLabel.text else { return }
+            ApiManager.shared.getOrders(productId: "\(currency)-USD") { order in
+                if let order = order {
+                    self.ordersData = order
+                    if self.ordersData.isEmpty == true {
+                        DispatchQueue.main.async {
+                            self.emptyView.isHidden = false
+                            self.historyTableView.mj_header?.endRefreshing()
+                        }
+                    } else {
+                        DispatchQueue.main.async {
+                            self.emptyView.isHidden = true
+                            self.historyTableView.reloadData()
+                            self.historyTableView.mj_header?.endRefreshing()
+                        }
+                    }
+                } else {
+                    print("沒資料")
+                    DispatchQueue.main.async {
+                        self.emptyView.isHidden = false
+                        self.historyTableView.mj_header?.endRefreshing()
+                    }
+                }
+            }
+            print("照文字內容帶入getOrders打API\(allCurrencyLabel.text)")
+        }
+        
+        
     }
     
     @objc func backButtonTapped() {
@@ -155,15 +218,20 @@ extension HistoryViewController: UITableViewDelegate, UITableViewDataSource {
         let cell = historyTableView.dequeueReusableCell(withIdentifier: "TradeTableViewCell", for: indexPath) as? TradeTableViewCell
         let order = ordersData[indexPath.row]
         cell?.setupUI()
-        cell?.setTopLabelViewText(order.side)
+        let side = order.side
+        let modifiedString = order.productId.replacingOccurrences(of: "-USD", with: "")
+        let middleLabel1Text = (side == "buy") ? "購入" : "賣出"
+        let numberString = order.executedValue
+        if let dotIndex = numberString.firstIndex(of: ".") {
+            let endIndex = numberString.index(dotIndex, offsetBy: 9)
+            let truncatedString = String(numberString[..<endIndex])
+            cell?.setBottomLabel2Text("USD$ \(truncatedString)")
+        }
+        cell?.setTopLabelViewText("\(side)")
         cell?.setTopLabel2Text("\(timeChange(dateString: order.doneAt!))")
-        let originalString = order.productId
-        let modifiedString = originalString.replacingOccurrences(of: "-USD", with: "")
-        
-        cell?.setMiddleLabel1Text("\(order.side) \(modifiedString)")
+        cell?.setMiddleLabel1Text("\(middleLabel1Text) \(modifiedString)")
         cell?.setMiddleLabel2Text("\(order.size)")
-        cell?.setBottomLabel1Text("\(order.status)")
-        cell?.setBottomLabel2Text("\(order.executedValue)")
+        cell?.setBottomLabel1Text(order.status == "done" ? "成功" : order.status)
         return cell!
     }
     

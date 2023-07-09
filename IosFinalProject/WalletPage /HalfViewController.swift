@@ -57,6 +57,7 @@ class HalfViewController: UIViewController {
             selectedIndexPath = IndexPath(row: savedIndexPathRow, section: 0)
         }
     }
+    
     func setupUI() {
         view.addSubview(backButton)
         view.addSubview(topLabel)

@@ -7,6 +7,7 @@
 
 import UIKit
 import Starscream
+import MJRefresh
 
 class ViewController: UIViewController {
 
@@ -48,45 +49,34 @@ class ViewController: UIViewController {
         myTableView.dataSource = self
         moneyLabel.text = "NT$\(inputNumber!)"
         myTableView.contentInsetAdjustmentBehavior = .never
-        addOverlayView()
-        
-        //買賣的訂單建立
-//        ApiManager.shared.creatOrder(size: "0.0003", side: "buy", productId: "BTC-USD") { asdasdas in
-//            print("asdasdasasdasdas\(asdasdas)")
-//        }
-        
-        //單筆訂單抓取
-//        let aaaaa = "a3b766bb-1a2d-406b-9fc8-58c5b831ff3f"
-//        ApiManager.shared.getOrderForId(id: aaaaa) { aaaaaaa in
-//            print("aaaaaaaaaaaaaaa\(aaaaaaa)")
-//        }
+        let refreshControl = MJRefreshNormalHeader()
+        refreshControl.setTitle("下拉刷新", for: .idle)
+        refreshControl.setTitle("釋放更新", for: .pulling)
+        refreshControl.setTitle("正在刷新...", for: .refreshing)
+
+        // 設置下拉刷新的回調方法
+        refreshControl.refreshingBlock = { [weak self] in
+            // 在這裡執行下拉刷新時的操作
+            // 例如重新加載數據、獲取最新數據等
+            // 完成後，使用 refreshControl.endRefreshing() 結束刷新
+            self?.loadData()
+        }
+
+        // 設置下拉刷新控制項
+        myTableView.mj_header = refreshControl
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         self.navigationController?.setNavigationBarHidden(true, animated: false)
+        
         ApiManager.shared.getProducts { products in
             self.producArray = products
             DispatchQueue.main.async {
                 self.myTableView.reloadData()
             }
         }
-        
-//        ApiManager.shared.getAccounts { accounts in
-//            guard let balance = self.getUSDBalance(accounts: accounts) else { return }
-//            getExchangeRate() { (exchangeRate) in
-//                if let exchangeRate = exchangeRate {
-//                    let twdAmount = (Double(balance) ?? 0.0) * exchangeRate
-//                    DispatchQueue.main.async {
-//                        self.moneyLabel.text = "NT$ \(Int(twdAmount))"
-//                        self.inputNumber = Int(twdAmount)
-//                    }
-//                    print("\(balance) USD = \(twdAmount) TWD")
-//                } else {
-//                    print("無法獲取匯率資料")
-//                }
-//            }
-//        }
+
         ApiManager.shared.getAccounts { accounts in
             self.getBalance(accounts: accounts) { balance in
                 if let number = Double(balance) {
@@ -106,6 +96,31 @@ class ViewController: UIViewController {
         addOverlayView()
     }
     
+    func loadData() {
+        ApiManager.shared.getProducts { products in
+            self.producArray = products
+            DispatchQueue.main.async {
+                self.myTableView.reloadData()
+//                self.myTableView.mj_header?.endRefreshing() // 結束刷新
+            }
+        }
+
+        ApiManager.shared.getAccounts { accounts in
+            self.getBalance(accounts: accounts) { balance in
+                if let number = Double(balance) {
+                    let integerValue = Int64(number)
+                    DispatchQueue.main.async {
+                        self.moneyLabel.text = "NT$ \(integerValue)"
+                        self.inputNumber = Int(integerValue)
+                        self.myTableView.mj_header?.endRefreshing()
+                    }
+                } else {
+                    print("無法將字串轉換為數字")
+                }
+            }
+        }
+    }
+
     func getUSDBalance(accounts: [Account]) -> String? {
         for account in accounts {
             if account.currency == "USD" {

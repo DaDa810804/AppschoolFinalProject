@@ -186,7 +186,25 @@ class SuccessfulTransactionViewController: UIViewController {
         label.font = UIFont.systemFont(ofSize: 16)
         label.textAlignment = .left
         label.numberOfLines = 0
-        label.text = "訂單相關問題，請撥打客服專線(02)2722-1314或來信至info@maicoin.com"
+
+        let phoneNumber = "(02)2722-1314"
+        let emailAddress = "info@maicoin.com"
+        let fullText = "訂單相關問題，請撥打客服專線\(phoneNumber)或來信至\(emailAddress)"
+
+        let attributedString = NSMutableAttributedString(string: fullText)
+
+        // 設定電話號碼的樣式（底線、藍色）
+        let phoneNumberRange = (fullText as NSString).range(of: phoneNumber)
+        attributedString.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: phoneNumberRange)
+        attributedString.addAttribute(.foregroundColor, value: UIColor.blue, range: phoneNumberRange)
+
+        // 設定電子郵件地址的樣式（底線、藍色）
+        let emailRange = (fullText as NSString).range(of: emailAddress)
+        attributedString.addAttribute(.underlineStyle, value: NSUnderlineStyle.single.rawValue, range: emailRange)
+        attributedString.addAttribute(.foregroundColor, value: UIColor.blue, range: emailRange)
+
+        label.attributedText = attributedString
+
         return label
     }()
     
@@ -240,7 +258,7 @@ class SuccessfulTransactionViewController: UIViewController {
         setTopLabelViewText(order.side)
         howManyLabel.text = "\(order.size) \(modifiedString)"
         orderTimeRightLabel.text = timeChange(dateString: order.createdAt)
-        updateTimeRightLabel.text = timeChange(dateString: (order.doneAt)!)
+        updateTimeRightLabel.text = timeChange(dateString: (order.doneAt) ?? "")
         unitPriceRightLabel.text = "USD$ \(String(format: "%.2f", unit))"
         amountsPayableRightLabel.text = "USD$ \(String(format: "%.2f", Double(order.executedValue)!))"
     }

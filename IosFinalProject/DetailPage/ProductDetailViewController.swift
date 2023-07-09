@@ -48,7 +48,6 @@ class ProductDetailViewController: UIViewController {
         
         ApiManager.shared.getOrders(productId: selectedCurrency!) { orders in
             if let orders = orders {
-                print("ordersorders\(orders)")
                 self.ordersArray = orders
                 DispatchQueue.main.async {
                     self.productDetailTableView.reloadData()
@@ -160,12 +159,18 @@ extension ProductDetailViewController: UITableViewDelegate, UITableViewDataSourc
             let order = ordersArray[indexPath.row - 3]
             let side = order.side
             let modifiedString = order.productId.replacingOccurrences(of: "-USD", with: "")
+            let middleLabel1Text = (side == "buy") ? "購入" : "賣出"
+            let numberString = order.executedValue
+            if let dotIndex = numberString.firstIndex(of: ".") {
+                let endIndex = numberString.index(dotIndex, offsetBy: 9)
+                let truncatedString = String(numberString[..<endIndex])
+                tradeCell.setBottomLabel2Text("USD$ \(truncatedString)")
+            }
             tradeCell.setTopLabelViewText("\(side)")
             tradeCell.setTopLabel2Text("\(timeChange(dateString: order.doneAt!))")
-            tradeCell.setMiddleLabel1Text("\(side) \(modifiedString)")
+            tradeCell.setMiddleLabel1Text("\(middleLabel1Text) \(modifiedString)")
             tradeCell.setMiddleLabel2Text("\(order.size)")
-            tradeCell.setBottomLabel1Text("\(order.status)")
-            tradeCell.setBottomLabel2Text("\(order.executedValue)")
+            tradeCell.setBottomLabel1Text(order.status == "done" ? "成功" : order.status)
             return tradeCell
         }
     }
