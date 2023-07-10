@@ -261,6 +261,11 @@ class SuccessfulTransactionViewController: UIViewController {
         updateTimeRightLabel.text = timeChange(dateString: (order.doneAt) ?? "")
         unitPriceRightLabel.text = "USD$ \(String(format: "%.2f", unit))"
         amountsPayableRightLabel.text = "USD$ \(String(format: "%.2f", Double(order.executedValue)!))"
+        if order.side == "buy" {
+            amountsPayableLabel.text = "應付金額"
+        } else {
+            amountsPayableLabel.text = "獲得金額"
+        }
     }
     
     func setBackgroudView() {

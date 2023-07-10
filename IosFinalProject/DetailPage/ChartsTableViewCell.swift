@@ -142,11 +142,11 @@ class ChartsTableViewCell: UITableViewCell {
                 var chartsArray: [Double] = []
                 var dayArray: [Double] = []
                 for index in candles! {
-                    self.dayArray.append(index.time)
+                    dayArray.append(index.time)
                     chartsArray.append((index.high + index.low) / 2)
                 }
                 DispatchQueue.main.async {
-                    self.changeChartViewData(dataArray: chartsArray.reversed())
+                    self.dayArray = dayArray.reversed()
                     self.changeChartViewData(dataArray: chartsArray.reversed())
                 }
             }

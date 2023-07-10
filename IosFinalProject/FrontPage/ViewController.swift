@@ -14,6 +14,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var myTableView: UITableView!
     var isOverlayViewAdded = false
     var producArray: [String] = []
+    var userWalletAllCurrency: [String] = []
     var inputNumber: Int? = 0
     let totalLabel: UILabel = {
         let label = UILabel()
@@ -78,6 +79,7 @@ class ViewController: UIViewController {
         }
 
         ApiManager.shared.getAccounts { accounts in
+            self.userWalletAllCurrency = self.getCurrencies(accounts: accounts)
             self.getBalance(accounts: accounts) { balance in
                 if let number = Double(balance) {
                     let integerValue = Int64(number)
@@ -106,6 +108,7 @@ class ViewController: UIViewController {
         }
 
         ApiManager.shared.getAccounts { accounts in
+            self.userWalletAllCurrency = self.getCurrencies(accounts: accounts)
             self.getBalance(accounts: accounts) { balance in
                 if let number = Double(balance) {
                     let integerValue = Int64(number)
@@ -154,6 +157,13 @@ class ViewController: UIViewController {
         }
     }
 
+    func getCurrencies(accounts: [Account]) -> [String] {
+        var currencies: [String] = []
+        for account in accounts {
+            currencies.append(account.currency)
+        }
+        return currencies
+    }
     
     func addOverlayView() {
         guard !isOverlayViewAdded, let cell = myTableView.cellForRow(at: IndexPath(row: 0, section: 0)) else { return }
@@ -233,11 +243,13 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
                         cell?.bottomLabel.text = productInfo?.chtName
                         cell?.chartBottomLabel.text = "\(formattedNumber)%"
                         let high = (Double(productStat.high)! + Double(productStat.low)!) / 2
+                        let highString = truncateDoubleToString(high)
                         getExchangeRate() { (exchangeRate) in
                             if let exchangeRate = exchangeRate {
                                 let twdAmount = high * exchangeRate
                                 DispatchQueue.main.async {
-                                    cell?.chartTopLabel.text = "\(Int(twdAmount))"
+//                                    cell?.chartTopLabel.text = "\(twdAmount)"
+                                    cell?.chartTopLabel.text = "\(highString)"
                                 }
                                 print("\(high) USD = \(twdAmount) TWD")
                             } else {
@@ -271,6 +283,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         let destinationVC = storyboard.instantiateViewController(withIdentifier: "ProductDetailViewController") as? ProductDetailViewController
         destinationVC?.hidesBottomBarWhenPushed = true
         destinationVC?.selectedCurrency = producArray[indexPath.row - 2]
+        destinationVC?.userWalletAllCurrency = self.userWalletAllCurrency
         navigationController?.pushViewController(destinationVC!, animated: true)
     }
 }

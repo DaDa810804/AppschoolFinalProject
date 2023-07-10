@@ -44,7 +44,7 @@ class HistoryViewController: UIViewController {
     let switchCurrencyButton: UIButton = {
         let backButton = UIButton(type: .system)
         backButton.translatesAutoresizingMaskIntoConstraints = false
-        backButton.setImage(UIImage(systemName: "chevron.down"), for: .normal)
+        backButton.setImage(UIImage(named: "downButton"), for: .normal)
         backButton.tintColor = .black
         backButton.addTarget(self, action: #selector(switchCurrencyTapped), for: .touchUpInside)
         backButton.heightAnchor.constraint(equalToConstant: 30).isActive = true
@@ -94,19 +94,57 @@ class HistoryViewController: UIViewController {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.isHidden = true
         tabBarController?.tabBar.isHidden = true
-        ApiManager.shared.getOneHundredOrders { orders in
-            guard let orders = orders else { return }
-            self.ordersData = orders
-            DispatchQueue.main.async {
-                self.historyTableView.reloadData()
+        
+        if allCurrencyLabel.text == "全部幣別" {
+            print("打100筆")
+            ApiManager.shared.getOneHundredOrders { orders in
+                guard let orders = orders else { return }
+                self.ordersData = orders
+                DispatchQueue.main.async {
+                    self.historyTableView.reloadData()
+                    self.historyTableView.mj_header?.endRefreshing()
+                }
             }
+        } else {
+            guard let currency = allCurrencyLabel.text else { return }
+            ApiManager.shared.getOrders(productId: "\(currency)-USD") { order in
+                if let order = order {
+                    self.ordersData = order
+                    if self.ordersData.isEmpty == true {
+                        DispatchQueue.main.async {
+                            self.emptyView.isHidden = false
+                            self.historyTableView.mj_header?.endRefreshing()
+                        }
+                    } else {
+                        DispatchQueue.main.async {
+                            self.emptyView.isHidden = true
+                            self.historyTableView.reloadData()
+                            self.historyTableView.mj_header?.endRefreshing()
+                        }
+                    }
+                } else {
+                    print("沒資料")
+                    DispatchQueue.main.async {
+                        self.emptyView.isHidden = false
+                        self.historyTableView.mj_header?.endRefreshing()
+                    }
+                }
+            }
+            print("照文字內容帶入getOrders打API\(allCurrencyLabel.text)")
         }
+//        ApiManager.shared.getOneHundredOrders { orders in
+//            guard let orders = orders else { return }
+//            self.ordersData = orders
+//            DispatchQueue.main.async {
+//                self.historyTableView.reloadData()
+//            }
+//        }
     }
     
     override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
-        let indexPath = IndexPath(row: 0, section: 0)
-        UserDefaults.standard.set(indexPath.row, forKey: "SelectedCurrencyIndexPath")
+//        let indexPath = IndexPath(row: 0, section: 0)
+//        UserDefaults.standard.set(indexPath.row, forKey: "SelectedCurrencyIndexPath")
     }
     
     func loadData() {
@@ -147,12 +185,12 @@ class HistoryViewController: UIViewController {
             }
             print("照文字內容帶入getOrders打API\(allCurrencyLabel.text)")
         }
-        
-        
     }
     
     @objc func backButtonTapped() {
         navigationController?.popViewController(animated: true)
+        let indexPath = IndexPath(row: 0, section: 0)
+        UserDefaults.standard.set(indexPath.row, forKey: "SelectedCurrencyIndexPath")
     }
     
     @objc func switchCurrencyTapped() {

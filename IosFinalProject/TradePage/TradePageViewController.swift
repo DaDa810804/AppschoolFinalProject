@@ -489,7 +489,7 @@ class TradePageViewController: UIViewController {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let stvc = storyboard.instantiateViewController(withIdentifier: "SuccessfulTransactionViewController") as? SuccessfulTransactionViewController
         if topTextField.text != "" {
-            ApiManager.shared.creatOrder(size: "0.0003", side: "buy", productId: selectedCurrency!) {
+            ApiManager.shared.creatOrder(size: "\(topTextField.text!)", side: "buy", productId: selectedCurrency!) {
                 responseOrder in
                 guard let orderID = responseOrder?.id else { return }
                 ApiManager.shared.getOrderForId(id: orderID) { order in
@@ -506,15 +506,16 @@ class TradePageViewController: UIViewController {
     }
     
     @objc func sellButtonTapped() {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil) // 替换为您的故事板名称
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let stvc = storyboard.instantiateViewController(withIdentifier: "SuccessfulTransactionViewController") as? SuccessfulTransactionViewController
         if topTextField.text != "" {
-            ApiManager.shared.creatOrder(size: "0.0003", side: "sell", productId: selectedCurrency!) {
+            ApiManager.shared.creatOrder(size: "\(topTextField.text!)", side: "sell", productId: selectedCurrency!) {
                 responseOrder in
                 guard let orderID = responseOrder?.id else { return }
                 ApiManager.shared.getOrderForId(id: orderID) { order in
                     stvc?.orderData = order
                     DispatchQueue.main.async {
+                        
                         self.navigationController?.pushViewController(stvc!, animated: true)
                     }
                 }

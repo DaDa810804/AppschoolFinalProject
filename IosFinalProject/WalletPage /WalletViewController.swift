@@ -122,41 +122,97 @@ class WalletViewController: UIViewController {
         super.viewWillAppear(animated)
         tabBarController?.tabBar.isHidden = false
         navigationController?.navigationBar.isHidden = true
+//        ApiManager.shared.getAccounts { accounts in
+//            self.userWalletAllCurrency = self.getCurrencies(accounts: accounts)
+//            guard let balance = self.getBalance(accounts: accounts) else { return }
+//            getExchangeRate() { (exchangeRate) in
+//                if let exchangeRate = exchangeRate {
+//                    let twdAmount = (Double(balance) ?? 0.0) * exchangeRate
+//                    DispatchQueue.main.async {
+//                        self.showBalanceLabel.text = "NT$ \(Int(twdAmount))"
+//                        self.inputNumber = Int(twdAmount)
+//                        self.walletTableView.reloadData()
+//                    }
+//                    print("\(balance) USD = \(twdAmount) TWD")
+//                } else {
+//                    print("無法獲取匯率資料")
+//                }
+//            }
+//        }
         ApiManager.shared.getAccounts { accounts in
             self.userWalletAllCurrency = self.getCurrencies(accounts: accounts)
-            guard let balance = self.getBalance(accounts: accounts) else { return }
-            getExchangeRate() { (exchangeRate) in
-                if let exchangeRate = exchangeRate {
-                    let twdAmount = (Double(balance) ?? 0.0) * exchangeRate
+            self.getBalance(accounts: accounts) { balance in
+                if let number = Double(balance) {
+                    let integerValue = Int64(number)
                     DispatchQueue.main.async {
-                        self.showBalanceLabel.text = "NT$ \(Int(twdAmount))"
-                        self.inputNumber = Int(twdAmount)
+                        self.showBalanceLabel.text = "NT$ \(integerValue)"
+                        self.inputNumber = Int(integerValue)
                         self.walletTableView.reloadData()
                     }
-                    print("\(balance) USD = \(twdAmount) TWD")
                 } else {
-                    print("無法獲取匯率資料")
+                    print("無法將字串轉換為數字")
                 }
             }
         }
     }
     
+    func getBalance(accounts: [Account], completion: @escaping (String) -> Void) {
+        let queue = DispatchQueue(label: "balanceQueue")
+        let group = DispatchGroup()
+        var ntBalance = 0.0
+
+        for account in accounts {
+            group.enter()
+            balanceArray.append(Double(account.balance)!)
+            queue.async {
+                getExchangeRateToCurrency(currency: account.currency) { (exchangeRate) in
+                    if let exchangeRate = exchangeRate {
+                        let twdAmount = (Double(account.balance) ?? 0.0) * exchangeRate
+                        ntBalance += twdAmount
+                        print("多少\(twdAmount) TWD")
+                    }
+                    group.leave()
+                }
+            }
+        }
+
+        group.notify(queue: queue) {
+            completion(String(ntBalance))
+        }
+    }
+    
     func loadData() {
+//        ApiManager.shared.getAccounts { accounts in
+//            self.userWalletAllCurrency = self.getCurrencies(accounts: accounts)
+//            guard let balance = self.getBalance(accounts: accounts) else { return }
+//            getExchangeRate() { (exchangeRate) in
+//                if let exchangeRate = exchangeRate {
+//                    let twdAmount = (Double(balance) ?? 0.0) * exchangeRate
+//                    DispatchQueue.main.async {
+//                        self.showBalanceLabel.text = "NT$ \(Int(twdAmount))"
+//                        self.inputNumber = Int(twdAmount)
+//                        self.walletTableView.reloadData()
+//                        self.walletTableView.mj_header?.endRefreshing()
+//                    }
+//                    print("\(balance) USD = \(twdAmount) TWD")
+//                } else {
+//                    print("無法獲取匯率資料")
+//                }
+//            }
+//        }
         ApiManager.shared.getAccounts { accounts in
             self.userWalletAllCurrency = self.getCurrencies(accounts: accounts)
-            guard let balance = self.getBalance(accounts: accounts) else { return }
-            getExchangeRate() { (exchangeRate) in
-                if let exchangeRate = exchangeRate {
-                    let twdAmount = (Double(balance) ?? 0.0) * exchangeRate
+            self.getBalance(accounts: accounts) { balance in
+                if let number = Double(balance) {
+                    let integerValue = Int64(number)
                     DispatchQueue.main.async {
-                        self.showBalanceLabel.text = "NT$ \(Int(twdAmount))"
-                        self.inputNumber = Int(twdAmount)
+                        self.showBalanceLabel.text = "NT$ \(integerValue)"
+                        self.inputNumber = Int(integerValue)
                         self.walletTableView.reloadData()
                         self.walletTableView.mj_header?.endRefreshing()
                     }
-                    print("\(balance) USD = \(twdAmount) TWD")
                 } else {
-                    print("無法獲取匯率資料")
+                    print("無法將字串轉換為數字")
                 }
             }
         }
@@ -170,15 +226,15 @@ class WalletViewController: UIViewController {
         return currencies
     }
     
-    func getBalance(accounts: [Account]) -> String? {
-        var totalBalance = 0.0
-        for account in accounts {
-            totalBalance += Double(account.balance)!
-            balanceArray.append(Double(account.balance)!)
-        }
-        let formattedBalance = String(format: "%.2f", totalBalance)
-        return formattedBalance
-    }
+//    func getBalance(accounts: [Account]) -> String? {
+//        var totalBalance = 0.0
+//        for account in accounts {
+//            totalBalance += Double(account.balance)!
+//            balanceArray.append(Double(account.balance)!)
+//        }
+//        let formattedBalance = String(format: "%.2f", totalBalance)
+//        return formattedBalance
+//    }
     
     func setupUI() {
         view.addSubview(redView)

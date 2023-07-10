@@ -106,7 +106,7 @@ class ProfileViewController: UIViewController {
     let signOutImageView: UIImageView = {
         let imageView = UIImageView()
         imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.image = UIImage(systemName: "power")
+        imageView.image = UIImage(systemName: "rectangle.portrait.and.arrow.right")
         imageView.tintColor = .black
         // 设置左侧图片视图的样式、内容等
         // ...

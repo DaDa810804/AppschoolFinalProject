@@ -34,8 +34,8 @@ func timeChange(dateString: String) -> String {
         let targetFormatter = DateFormatter()
         targetFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
         targetFormatter.timeZone = targetTimeZone
-        
-        let formattedDate = targetFormatter.string(from: date)
+        let targetDate = date.addingTimeInterval(8 * 60 * 60)
+        let formattedDate = targetFormatter.string(from: targetDate)
         return formattedDate
         print(formattedDate)
     } else {
@@ -44,4 +44,14 @@ func timeChange(dateString: String) -> String {
         return ""
     }
 }
+
+func truncateDoubleToString(_ value: Double) -> String {
+    let stringValue = String(value)
+    if stringValue.count > 8 {
+        let index = stringValue.index(stringValue.startIndex, offsetBy: 8)
+        return String(stringValue[..<index])
+    }
+    return stringValue
+}
+
 

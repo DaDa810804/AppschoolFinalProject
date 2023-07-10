@@ -15,15 +15,19 @@ class ProductDetailViewController: UIViewController {
     var ordersArray: [Order] = []
     var candlesArray: [Candles] = []
     var chartsArray: [Double] = []
+    var userWalletAllCurrency: [String] = []
     override func viewDidLoad() {
         super.viewDidLoad()
         productDetailTableView.dataSource = self
         productDetailTableView.delegate = self
-        self.navigationController?.setNavigationBarHidden(false, animated: false)
+        let backButton = UIBarButtonItem(image: UIImage(systemName: "chevron.left"), style: .plain, target: self, action: #selector(backButtonTapped))
+        navigationItem.leftBarButtonItem = backButton
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.navigationController?.setNavigationBarHidden(false, animated: false)
+        navigationController?.navigationBar.isHidden = false
         //拿折線圖資料
 //        if let selectedCurrency = selectedCurrency {
 //            ApiManager.shared.fetchCandleData(productID: selectedCurrency, timeRange: TimeRange.oneDay) { candles,error  in
@@ -58,7 +62,7 @@ class ProductDetailViewController: UIViewController {
         let modifiedString = originalString.replacingOccurrences(of: "-USD", with: "")
         navigationItem.title = "\(ProductInfo.fromTableStatName(originalString)!.chtName)(\(modifiedString))"
     }
-    
+
     @IBAction func buyButton(_ sender: UIButton) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let destinationVC = storyboard.instantiateViewController(withIdentifier: "TradePageViewController") as? TradePageViewController
@@ -81,6 +85,25 @@ class ProductDetailViewController: UIViewController {
         destinationVC?.modalPresentationStyle = .fullScreen
         destinationVC?.selectedCurrency = selectedCurrency
         present(navController, animated: true)
+    }
+    
+    @objc func backButtonTapped() {
+        navigationController?.popViewController(animated: true)
+    }
+    
+    @objc func cheekAllButtonTapped() {
+        print("查看全部")
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let hVC = storyboard.instantiateViewController(withIdentifier: "HistoryViewController") as? HistoryViewController
+        guard let originalString = selectedCurrency else { return }
+        let modifiedString = originalString.replacingOccurrences(of: "-USD", with: "")
+        hVC?.userWalletAllCurrency = self.userWalletAllCurrency
+        hVC?.allCurrencyLabel.text = modifiedString//BTC
+        //這邊進去的話要給他indexPath
+        let indexPathRow = userWalletAllCurrency.firstIndex(of: modifiedString)! + 1
+        let indexPath = IndexPath(row: indexPathRow, section: 0)
+        UserDefaults.standard.set(indexPath.row, forKey: "SelectedCurrencyIndexPath")
+        navigationController?.pushViewController(hVC!, animated: true)
     }
 }
 
@@ -152,6 +175,7 @@ extension ProductDetailViewController: UITableViewDelegate, UITableViewDataSourc
             guard let labelCell = productDetailTableView.dequeueReusableCell(withIdentifier: "LabelAndButtonTableViewCell", for: indexPath) as? LabelAndButtonTableViewCell else
             { return LabelAndButtonTableViewCell() }
             labelCell.backgroundColor = UIColor.gray.withAlphaComponent(0.1)
+            labelCell.button.addTarget(self, action: #selector(cheekAllButtonTapped), for: .touchUpInside)
             return labelCell
         } else {
             guard let tradeCell = productDetailTableView.dequeueReusableCell(withIdentifier: "TradeTableViewCell", for: indexPath) as? TradeTableViewCell else { return TradeTableViewCell() }
