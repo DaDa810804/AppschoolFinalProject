@@ -7,6 +7,7 @@
 
 import UIKit
 import IQKeyboardManagerSwift
+import JGProgressHUD
 
 class TradePageViewController: UIViewController {
     var realTimeDataHandler: (([String]) -> Void)?
@@ -14,6 +15,7 @@ class TradePageViewController: UIViewController {
     var selectedCurrency: String?
     var instantAmount: String = "0"
     let availableBalanceLabel = UILabel()
+    let myHud = JGProgressHUD()
     var availableBalance: Double?
     var isTopTextFieldEditable = true
     var buyPrice: Double? {
@@ -105,6 +107,7 @@ class TradePageViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        myHud.textLabel.text = "Loading"
         bottomTextField.keyboardType = .decimalPad
         bottomTextField.returnKeyType = .done
         topTextField.keyboardType = .decimalPad
@@ -455,7 +458,6 @@ class TradePageViewController: UIViewController {
     }
     
     @objc func changeInputButton() {
-//        isTopTextFieldEditable = !isTopTextFieldEditable
         
         if isTopTextFieldEditable  == false {
             topTextField.isUserInteractionEnabled = true
@@ -488,41 +490,63 @@ class TradePageViewController: UIViewController {
     @objc func buyButtonTapped() {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let stvc = storyboard.instantiateViewController(withIdentifier: "SuccessfulTransactionViewController") as? SuccessfulTransactionViewController
-        if topTextField.text != "" {
-            ApiManager.shared.creatOrder(size: "\(topTextField.text!)", side: "buy", productId: selectedCurrency!) {
-                responseOrder in
-                guard let orderID = responseOrder?.id else { return }
-                ApiManager.shared.getOrderForId(id: orderID) { order in
-                    stvc?.orderData = order
-                    DispatchQueue.main.async {
-                        self.navigationController?.pushViewController(stvc!, animated: true)
+        myHud.show(in: view)
+        if let text = topTextField.text, let number = Double(text) {
+            // 文字轉換為Double成功
+            if number <= 2.0 && number >= 0.00002 {
+                print("可以買賣")
+                ApiManager.shared.creatOrder(size: "\(number)", side: "buy", productId: selectedCurrency!) {
+                    responseOrder in
+                    guard let orderID = responseOrder?.id else { return }
+                    ApiManager.shared.getOrderForId(id: orderID) { order in
+                        stvc?.orderData = order
+                        DispatchQueue.main.async {
+                            self.myHud.dismiss()
+                            self.navigationController?.pushViewController(stvc!, animated: true)
+                        }
                     }
                 }
+            } else {
+                self.myHud.dismiss()
+                print("不能買賣")
+                showAlert(title: "錯誤", message: "超出可買賣範圍")
             }
-            print("買東西")
         } else {
-            print("顯示警告控制器")
+            self.myHud.dismiss()
+            showAlert(title: "錯誤", message: "請輸入金額")
+            print("無效的格式")
         }
+
     }
     
     @objc func sellButtonTapped() {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let stvc = storyboard.instantiateViewController(withIdentifier: "SuccessfulTransactionViewController") as? SuccessfulTransactionViewController
-        if topTextField.text != "" {
-            ApiManager.shared.creatOrder(size: "\(topTextField.text!)", side: "sell", productId: selectedCurrency!) {
-                responseOrder in
-                guard let orderID = responseOrder?.id else { return }
-                ApiManager.shared.getOrderForId(id: orderID) { order in
-                    stvc?.orderData = order
-                    DispatchQueue.main.async {
-                        
-                        self.navigationController?.pushViewController(stvc!, animated: true)
+        myHud.show(in: view)
+        if let text = topTextField.text, let number = Double(text) {
+            // 文字轉換為Double成功
+            if number <= 2.0 && number >= 0.00002 {
+                print("可以買賣")
+                ApiManager.shared.creatOrder(size: "\(number)", side: "sell", productId: selectedCurrency!) {
+                    responseOrder in
+                    guard let orderID = responseOrder?.id else { return }
+                    ApiManager.shared.getOrderForId(id: orderID) { order in
+                        stvc?.orderData = order
+                        DispatchQueue.main.async {
+                            self.myHud.dismiss()
+                            self.navigationController?.pushViewController(stvc!, animated: true)
+                        }
                     }
                 }
+            } else {
+                print("不能買賣")
+                self.myHud.dismiss()
+                showAlert(title: "錯誤", message: "超出可買賣範圍")
             }
-            print("賣東西")
         } else {
-            print("顯示警告控制器")
+            self.myHud.dismiss()
+            showAlert(title: "錯誤", message: "請輸入金額")
+            print("無效的格式")
         }
     }
     

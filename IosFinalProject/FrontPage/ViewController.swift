@@ -30,7 +30,7 @@ class ViewController: UIViewController {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.textAlignment = .left
-        label.font = UIFont.systemFont(ofSize: 30,weight: .medium)
+        label.font = UIFont.systemFont(ofSize: 24,weight: .medium)
 //        label.text = "NT$ \(inputNumber!)"
         return label
     }()
@@ -82,11 +82,20 @@ class ViewController: UIViewController {
             self.userWalletAllCurrency = self.getCurrencies(accounts: accounts)
             self.getBalance(accounts: accounts) { balance in
                 if let number = Double(balance) {
+                    let formatter = NumberFormatter()
+                    formatter.numberStyle = .decimal
                     let integerValue = Int64(number)
-                    DispatchQueue.main.async {
-                        self.moneyLabel.text = "NT$ \(integerValue)"
-                        self.inputNumber = Int(integerValue)
+                    if let formattedNumber = formatter.string(from: NSNumber(value: integerValue)) {
+                        print(formattedNumber) // 印出 29,345,127,312.234
+                        DispatchQueue.main.async {
+                            self.moneyLabel.text = "NT$ \(formattedNumber)"
+                            self.inputNumber = Int(integerValue)
+                        }
+                    } else {
+                        print("Invalid number string")
                     }
+                    
+
                 } else {
                     print("無法將字串轉換為數字")
                 }
@@ -208,7 +217,19 @@ class ViewController: UIViewController {
     
     @objc func eyesButtonTapped() {
         if moneyLabel.text == "NT$ ******" {
-            moneyLabel.text = "NT$ \(inputNumber!)"
+            let numberString = "\(inputNumber)"
+
+            let formatter = NumberFormatter()
+            formatter.numberStyle = .decimal
+
+            if let number = Double(numberString), let formattedNumber = formatter.string(from: NSNumber(value: number)) {
+                moneyLabel.text = "NT$ \(inputNumber!)"
+                print(formattedNumber) // 印出 29,345,127,312.234
+            } else {
+                print("Invalid number string")
+            }
+
+//            moneyLabel.text = "NT$ \(inputNumber!)"
         } else {
             moneyLabel.text = "NT$ ******"
         }

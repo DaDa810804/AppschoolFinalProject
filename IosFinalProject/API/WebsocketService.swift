@@ -1,8 +1,4 @@
-//
-//  CoinbaseService.swift
-//  CoinMaster-Sylvia
-//
-//  Created by Sin on 2023/6/30.
+
 //
 
 import Foundation

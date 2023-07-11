@@ -7,6 +7,7 @@
 
 import UIKit
 import Charts
+import JGProgressHUD
 
 class ChartsTableViewCell: UITableViewCell {
     var getPriceCell: (() -> (PriceTableViewCell))!
@@ -19,14 +20,20 @@ class ChartsTableViewCell: UITableViewCell {
     var rightDataArray: [Double] = []
     var dayArray:[Double] = []
     var dataEntries: [ChartDataEntry] = []
-
     
+    let myHud = JGProgressHUD()
     
     let stackView = UIStackView()
     let buttonTitles = ["1D", "1W", "1M", "3M", "1Y", "All"]
     var lineChartView: LineChartView!
     var indicatorView: UIView!
-
+    let timeRanges: [Int: TimeRange] = [
+        0: .oneDay,
+        1: .oneWeek,
+        2: .oneMonth,
+        3: .threeMonths,
+        4: .oneYear
+    ]
     override func awakeFromNib() {
         super.awakeFromNib()
         setupLineChartView()
@@ -35,6 +42,7 @@ class ChartsTableViewCell: UITableViewCell {
 //        setChartView(dataArray: rightDataArray)
         lineChartView.setViewPortOffsets(left: 0, top: 0, right: 0, bottom: 20)
 //        updateViews()
+        myHud.textLabel.text = "Loading"
     }
 
     func setupLineChartView() {
@@ -99,19 +107,22 @@ class ChartsTableViewCell: UITableViewCell {
             indicatorView.centerXAnchor.constraint(equalTo: selectedButton.centerXAnchor).isActive = true
         }
     }
-
+    
     @objc func buttonTapped(_ sender: UIButton) {
         let index = sender.tag
         updateIndicatorPosition(for: index)
+        myHud.show(in: self.contentView)
         if index == 0 {
             ApiManager.shared.fetchCandleData(productID: selectedCurrency!, timeRange: TimeRange.oneDay) {
                 candles, error in
+                //拿到第一筆的資料的時間，並將資料存在cache中，也要存該次的時間，下次按下該按鈕時，先比較當前時間是否比存下來的時間多餘3600秒，大於則打API，少於的話就使用cache的資料
                 if candles?.isEmpty == false {
                     var dayArray: [Double] = [] ; var chartsArray: [Double] = []
                     for index in candles! {
                         dayArray.append(index.time)
                         chartsArray.append((index.high + index.low) / 2)
                     }
+                    
                     DispatchQueue.main.async {
                         self.dayArray = dayArray.reversed()
                         self.changeChartViewData(dataArray: chartsArray.reversed())
@@ -120,48 +131,6 @@ class ChartsTableViewCell: UITableViewCell {
                     DispatchQueue.main.async {
                         self.changeChartViewData(dataArray: [0,0])
                     }
-                }
-            }
-        } else if index == 1 {
-            ApiManager.shared.fetchCandleData(productID: selectedCurrency!, timeRange: TimeRange.oneWeek) {
-                candles, error in
-                var chartsArray: [Double] = []
-                var dayArray: [Double] = []
-                for index in candles! {
-                    dayArray.append(index.time)
-                    chartsArray.append((index.high + index.low) / 2)
-                }
-                DispatchQueue.main.async {
-                    self.dayArray = dayArray.reversed()
-                    self.changeChartViewData(dataArray: chartsArray.reversed())
-                }
-            }
-        } else if index == 2 {
-            ApiManager.shared.fetchCandleData(productID: selectedCurrency!, timeRange: TimeRange.oneMonth) {
-                candles, error in
-                var chartsArray: [Double] = []
-                var dayArray: [Double] = []
-                for index in candles! {
-                    dayArray.append(index.time)
-                    chartsArray.append((index.high + index.low) / 2)
-                }
-                DispatchQueue.main.async {
-                    self.dayArray = dayArray.reversed()
-                    self.changeChartViewData(dataArray: chartsArray.reversed())
-                }
-            }
-        } else if index == 3 {
-            ApiManager.shared.fetchCandleData(productID: selectedCurrency!, timeRange: TimeRange.threeMonths) {
-                candles, error in
-                var chartsArray: [Double] = []
-                var dayArray: [Double] = []
-                for index in candles! {
-                    dayArray.append(index.time)
-                    chartsArray.append((index.high + index.low) / 2)
-                }
-                DispatchQueue.main.async {
-                    self.dayArray = dayArray.reversed()
-                    self.changeChartViewData(dataArray: chartsArray.reversed())
                 }
             }
         } else if index == 4 {
@@ -179,29 +148,148 @@ class ChartsTableViewCell: UITableViewCell {
                 }
             }
         } else if index == 5 {
-            ApiManager.shared.fetchAllCandleData(productID: selectedCurrency!) { candles, error in
-                var chartsArray: [Double] = []
-                var dayArray: [Double] = []
-                for index in candles! {
-                    dayArray.append(index.time)
-                    chartsArray.append((index.high + index.low) / 2)
+            DispatchQueue.global().async {
+                ApiManager.shared.fetchAllCandleData(productID: self.selectedCurrency!) { candles, error in
+                    var chartsArray: [Double] = []
+                    var dayArray: [Double] = []
+                    for index in candles! {
+                        dayArray.append(index.time)
+                        chartsArray.append((index.high + index.low) / 2)
+                    }
+                    DispatchQueue.main.async {
+                        self.dayArray = dayArray.reversed()
+                        self.changeChartViewData(dataArray: chartsArray.reversed())
+                        
+                    }
                 }
-                DispatchQueue.main.async {
-                    self.dayArray = dayArray.reversed()
-                    self.changeChartViewData(dataArray: chartsArray.reversed())
+            }
+        } else {
+            if let selectedTimeRange = timeRanges[index] {
+                ApiManager.shared.fetchCandleData(productID: selectedCurrency!, timeRange: selectedTimeRange) { candles, error in
+                    var chartsArray: [Double] = []
+                    var dayArray: [Double] = []
+                    if let candles = candles {
+                        for index in candles {
+                            dayArray.append(index.time)
+                            chartsArray.append((index.high + index.low) / 2)
+                        }
+                    }
+                    DispatchQueue.main.async {
+                        self.dayArray = dayArray.reversed()
+                        self.changeChartViewData(dataArray: chartsArray.reversed())
+                    }
                 }
             }
         }
         for (buttonIndex, button) in stackView.arrangedSubviews.enumerated() {
             if let button = button as? UIButton {
-                if buttonIndex == index {
-                    button.setTitleColor(.red, for: .normal) // 点击状态下字体为红色
-                } else {
-                    button.setTitleColor(.gray, for: .normal) // 非点击状态下字体为灰色
-                }
+                button.setTitleColor(buttonIndex == index ? .red : .gray, for: .normal)
             }
         }
     }
+    
+//    @objc func buttonTapped(_ sender: UIButton) {
+//        let index = sender.tag
+//        updateIndicatorPosition(for: index)
+//        if index == 0 {
+//            ApiManager.shared.fetchCandleData(productID: selectedCurrency!, timeRange: TimeRange.oneDay) {
+//                candles, error in
+//                if candles?.isEmpty == false {
+//                    var dayArray: [Double] = [] ; var chartsArray: [Double] = []
+//                    for index in candles! {
+//                        dayArray.append(index.time)
+//                        chartsArray.append((index.high + index.low) / 2)
+//                    }
+//                    DispatchQueue.main.async {
+//                        self.dayArray = dayArray.reversed()
+//                        self.changeChartViewData(dataArray: chartsArray.reversed())
+//                    }
+//                } else {
+//                    DispatchQueue.main.async {
+//                        self.changeChartViewData(dataArray: [0,0])
+//                    }
+//                }
+//            }
+//        } else if index == 1 {
+//            ApiManager.shared.fetchCandleData(productID: selectedCurrency!, timeRange: TimeRange.oneWeek) {
+//                candles, error in
+//                var chartsArray: [Double] = []
+//                var dayArray: [Double] = []
+//                for index in candles! {
+//                    dayArray.append(index.time)
+//                    chartsArray.append((index.high + index.low) / 2)
+//                }
+//                DispatchQueue.main.async {
+//                    self.dayArray = dayArray.reversed()
+//                    self.changeChartViewData(dataArray: chartsArray.reversed())
+//                }
+//            }
+//        } else if index == 2 {
+//            ApiManager.shared.fetchCandleData(productID: selectedCurrency!, timeRange: TimeRange.oneMonth) {
+//                candles, error in
+//                var chartsArray: [Double] = []
+//                var dayArray: [Double] = []
+//                for index in candles! {
+//                    dayArray.append(index.time)
+//                    chartsArray.append((index.high + index.low) / 2)
+//                }
+//                DispatchQueue.main.async {
+//                    self.dayArray = dayArray.reversed()
+//                    self.changeChartViewData(dataArray: chartsArray.reversed())
+//                }
+//            }
+//        } else if index == 3 {
+//            ApiManager.shared.fetchCandleData(productID: selectedCurrency!, timeRange: TimeRange.threeMonths) {
+//                candles, error in
+//                var chartsArray: [Double] = []
+//                var dayArray: [Double] = []
+//                for index in candles! {
+//                    dayArray.append(index.time)
+//                    chartsArray.append((index.high + index.low) / 2)
+//                }
+//                DispatchQueue.main.async {
+//                    self.dayArray = dayArray.reversed()
+//                    self.changeChartViewData(dataArray: chartsArray.reversed())
+//                }
+//            }
+//        } else if index == 4 {
+//            ApiManager.shared.fetchCandleYearData(productID: selectedCurrency!, timeRange: TimeRange.oneYear) {
+//                candles, error in
+//                var chartsArray: [Double] = []
+//                var dayArray: [Double] = []
+//                for index in candles! {
+//                    dayArray.append(index.time)
+//                    chartsArray.append((index.high + index.low) / 2)
+//                }
+//                DispatchQueue.main.async {
+//                    self.dayArray = dayArray
+//                    self.changeChartViewData(dataArray: chartsArray)
+//                }
+//            }
+//        } else if index == 5 {
+//            ApiManager.shared.fetchAllCandleData(productID: selectedCurrency!) { candles, error in
+//                var chartsArray: [Double] = []
+//                var dayArray: [Double] = []
+//                for index in candles! {
+//                    dayArray.append(index.time)
+//                    chartsArray.append((index.high + index.low) / 2)
+//                }
+//                DispatchQueue.main.async {
+//                    self.dayArray = dayArray.reversed()
+//                    self.changeChartViewData(dataArray: chartsArray.reversed())
+//                }
+//            }
+//        }
+//        for (buttonIndex, button) in stackView.arrangedSubviews.enumerated() {
+//            if let button = button as? UIButton {
+//                if buttonIndex == index {
+//                    button.setTitleColor(.red, for: .normal) // 点击状态下字体为红色
+//                } else {
+//                    button.setTitleColor(.gray, for: .normal) // 非点击状态下字体为灰色
+//                }
+//            }
+//        }
+//    }
     
     func updateIndicatorPosition(for index: Int) {
         guard let selectedButton = stackView.arrangedSubviews[index] as? UIButton else {
@@ -248,7 +336,7 @@ extension ChartsTableViewCell: ChartViewDelegate {
         dataSet.valueFont = .systemFont(ofSize: 12)
         data = LineChartData(dataSet: dataSet)
         lineChartView.data = data
-
+        self.myHud.dismiss()
 
         if let data = lineChartView.data {
             if let lineDataSet = data.dataSets.first as? LineChartDataSet {

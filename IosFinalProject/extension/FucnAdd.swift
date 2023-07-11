@@ -54,4 +54,19 @@ func truncateDoubleToString(_ value: Double) -> String {
     return stringValue
 }
 
+func showAlert(title: String, message: String) {
+    let alertController = UIAlertController(title: title, message: message, preferredStyle: .alert)
+    let cancelAction = UIAlertAction(title: "Cancel", style: .default) { (action) in
+        print("Cancel")
+    }
+    alertController.addAction(cancelAction)
+    
+    if let topViewController = UIApplication.shared.windows.first?.rootViewController {
+        if let presentedViewController = topViewController.presentedViewController {
+            presentedViewController.present(alertController, animated: true, completion: nil)
+        } else {
+            topViewController.present(alertController, animated: true, completion: nil)
+        }
+    }
+}
 

@@ -7,9 +7,10 @@
 
 import UIKit
 import MJRefresh
+import JGProgressHUD
 
 class HistoryViewController: UIViewController {
-    
+    let myHud = JGProgressHUD()
     var userWalletAllCurrency: [String] = []
     var ordersData: [Order] = []
     let backButton: UIButton = {
@@ -69,6 +70,7 @@ class HistoryViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        myHud.textLabel.text = "Loading"
         setupUI()
         historyTableView.dataSource = self
         historyTableView.delegate = self
@@ -94,68 +96,43 @@ class HistoryViewController: UIViewController {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.isHidden = true
         tabBarController?.tabBar.isHidden = true
-        
+    
         if allCurrencyLabel.text == "全部幣別" {
             print("打100筆")
-            ApiManager.shared.getOneHundredOrders { orders in
-                guard let orders = orders else { return }
-                self.ordersData = orders
-                DispatchQueue.main.async {
-                    self.historyTableView.reloadData()
-                    self.historyTableView.mj_header?.endRefreshing()
-                }
-            }
+            fetchOrders()
         } else {
-            guard let currency = allCurrencyLabel.text else { return }
-            ApiManager.shared.getOrders(productId: "\(currency)-USD") { order in
-                if let order = order {
-                    self.ordersData = order
-                    if self.ordersData.isEmpty == true {
-                        DispatchQueue.main.async {
-                            self.emptyView.isHidden = false
-                            self.historyTableView.mj_header?.endRefreshing()
-                        }
-                    } else {
-                        DispatchQueue.main.async {
-                            self.emptyView.isHidden = true
-                            self.historyTableView.reloadData()
-                            self.historyTableView.mj_header?.endRefreshing()
-                        }
-                    }
-                } else {
-                    print("沒資料")
-                    DispatchQueue.main.async {
-                        self.emptyView.isHidden = false
-                        self.historyTableView.mj_header?.endRefreshing()
-                    }
-                }
-            }
-            print("照文字內容帶入getOrders打API\(allCurrencyLabel.text)")
+            fetchOrderForCurrency()
         }
-//        ApiManager.shared.getOneHundredOrders { orders in
-//            guard let orders = orders else { return }
-//            self.ordersData = orders
-//            DispatchQueue.main.async {
-//                self.historyTableView.reloadData()
-//            }
-//        }
-    }
-    
-    override func viewDidDisappear(_ animated: Bool) {
-        super.viewDidDisappear(animated)
-//        let indexPath = IndexPath(row: 0, section: 0)
-//        UserDefaults.standard.set(indexPath.row, forKey: "SelectedCurrencyIndexPath")
     }
     
     func loadData() {
         if allCurrencyLabel.text == "全部幣別" {
             print("打100筆")
             ApiManager.shared.getOneHundredOrders { orders in
-                guard let orders = orders else { return }
-                self.ordersData = orders
-                DispatchQueue.main.async {
-                    self.historyTableView.reloadData()
-                    self.historyTableView.mj_header?.endRefreshing()
+                if let orders = orders {
+                    self.ordersData = orders
+                    DispatchQueue.main.async {
+                        self.historyTableView.reloadData()
+                        self.historyTableView.mj_header?.endRefreshing()
+                    }
+                } else {
+                    let alertController = UIAlertController(title: "無法獲取資料", message: "是否繼續加載？", preferredStyle: .alert)
+                    
+                    let continueAction = UIAlertAction(title: "繼續", style: .default) { _ in
+                        // 繼續執行其他操作
+                        self.loadData() // 再次呼叫該方法繼續取得資料
+                    }
+                    alertController.addAction(continueAction)
+                    
+                    let cancelAction = UIAlertAction(title: "返回", style: .cancel) { _ in
+                        // 返回上一頁或執行其他返回操作
+                        self.navigationController?.popViewController(animated: true)
+                    }
+                    alertController.addAction(cancelAction)
+                    
+                    DispatchQueue.main.async {
+                        self.present(alertController, animated: true, completion: nil)
+                    }
                 }
             }
         } else {
@@ -177,9 +154,24 @@ class HistoryViewController: UIViewController {
                     }
                 } else {
                     print("沒資料")
+                    let alertController = UIAlertController(title: "無法獲取資料", message: "是否繼續加載？", preferredStyle: .alert)
+                    
+                    let continueAction = UIAlertAction(title: "繼續", style: .default) { _ in
+                        // 繼續執行其他操作
+                        self.loadData() // 再次呼叫該方法繼續取得資料
+                    }
+                    alertController.addAction(continueAction)
+                    
+                    let cancelAction = UIAlertAction(title: "返回", style: .cancel) { _ in
+                        // 返回上一頁或執行其他返回操作
+                        self.navigationController?.popViewController(animated: true)
+                    }
+                    alertController.addAction(cancelAction)
+
                     DispatchQueue.main.async {
                         self.emptyView.isHidden = false
                         self.historyTableView.mj_header?.endRefreshing()
+                        self.present(alertController, animated: true, completion: nil)
                     }
                 }
             }
@@ -245,9 +237,89 @@ class HistoryViewController: UIViewController {
         ])
         emptyView.isHidden = true
     }
+    
+    func fetchOrderForCurrency() {
+        myHud.show(in: view)
+        guard let currency = allCurrencyLabel.text else { return }
+        ApiManager.shared.getOrders(productId: "\(currency)-USD") { order in
+            if let order = order {
+                self.ordersData = order
+                if self.ordersData.isEmpty == true {
+                    DispatchQueue.main.async {
+                        self.emptyView.isHidden = false
+                        self.myHud.dismiss()
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        self.emptyView.isHidden = true
+                        self.historyTableView.reloadData()
+                        self.myHud.dismiss()
+                    }
+                }
+            } else {
+                let alertController = UIAlertController(title: "無法獲取資料", message: "是否繼續加載？", preferredStyle: .alert)
+                
+                let continueAction = UIAlertAction(title: "繼續", style: .default) { _ in
+                    // 繼續執行其他操作
+                    self.fetchOrderForCurrency() // 再次呼叫該方法繼續取得資料
+                }
+                alertController.addAction(continueAction)
+                
+                let cancelAction = UIAlertAction(title: "返回", style: .cancel) { _ in
+                    // 返回上一頁或執行其他返回操作
+                    self.navigationController?.popViewController(animated: true)
+                }
+                alertController.addAction(cancelAction)
+                
+                DispatchQueue.main.async {
+                    self.present(alertController, animated: true, completion: nil)
+                    self.myHud.dismiss()
+                }
+//                print("沒資料")
+//                DispatchQueue.main.async {
+//                    self.emptyView.isHidden = false
+//                    self.myHud.dismiss()
+//                }
+            }
+        }
+        print("照文字內容帶入getOrders打API\(allCurrencyLabel.text)")
+    }
+    
+    func fetchOrders() {
+        myHud.show(in: view)
+        ApiManager.shared.getOneHundredOrders { orders in
+            if let orders = orders {
+                self.ordersData = orders
+                DispatchQueue.main.async {
+                    self.historyTableView.reloadData()
+                    self.myHud.dismiss()
+                }
+            } else {
+                let alertController = UIAlertController(title: "無法獲取資料", message: "是否繼續加載？", preferredStyle: .alert)
+                
+                let continueAction = UIAlertAction(title: "繼續", style: .default) { _ in
+                    // 繼續執行其他操作
+                    self.fetchOrders() // 再次呼叫該方法繼續取得資料
+                }
+                alertController.addAction(continueAction)
+                
+                let cancelAction = UIAlertAction(title: "返回", style: .cancel) { _ in
+                    // 返回上一頁或執行其他返回操作
+                    self.navigationController?.popViewController(animated: true)
+                }
+                alertController.addAction(cancelAction)
+                
+                DispatchQueue.main.async {
+                    self.present(alertController, animated: true, completion: nil)
+                    self.myHud.dismiss()
+                }
+            }
+        }
+    }
 }
 
 extension HistoryViewController: UITableViewDelegate, UITableViewDataSource {
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return ordersData.count
     }
@@ -286,15 +358,36 @@ extension HistoryViewController: UITableViewDelegate, UITableViewDataSource {
 extension HistoryViewController: HalfViewControllerDelegate {
     
     func didSelectCurrency(_ currency: String) {
+        myHud.show(in: view)
         if currency == "所有幣種" {
             print("打100筆資料回來")
             ApiManager.shared.getOneHundredOrders { orders in
-                guard let orders = orders else { return }
-                self.ordersData = orders
-                DispatchQueue.main.async {
-                    self.emptyView.isHidden = true
-                    self.allCurrencyLabel.text = "全部幣別"
-                    self.historyTableView.reloadData()
+                if let orders = orders {
+                    self.ordersData = orders
+                    DispatchQueue.main.async {
+                        self.emptyView.isHidden = true
+                        self.allCurrencyLabel.text = "全部幣別"
+                        self.historyTableView.reloadData()
+                    }
+                } else {
+                    let alertController = UIAlertController(title: "無法獲取資料", message: "是否繼續加載？", preferredStyle: .alert)
+                    
+                    let continueAction = UIAlertAction(title: "繼續", style: .default) { _ in
+                        // 繼續執行其他操作
+                        self.fetchOrders() // 再次呼叫該方法繼續取得資料
+                    }
+                    alertController.addAction(continueAction)
+                    
+                    let cancelAction = UIAlertAction(title: "返回", style: .cancel) { _ in
+                        // 返回上一頁或執行其他返回操作
+                        self.navigationController?.popViewController(animated: true)
+                    }
+                    alertController.addAction(cancelAction)
+                    
+                    DispatchQueue.main.async {
+                        self.present(alertController, animated: true, completion: nil)
+                        self.myHud.dismiss()
+                    }
                 }
             }
         } else {
@@ -310,13 +403,31 @@ extension HistoryViewController: HalfViewControllerDelegate {
                         } else {
                             DispatchQueue.main.async {
                                 self.emptyView.isHidden = true
+                                self.myHud.dismiss()
                                 self.historyTableView.reloadData()
                             }
                         }
                     } else {
                         print("沒資料")
+                        let alertController = UIAlertController(title: "無法獲取資料", message: "是否繼續加載？", preferredStyle: .alert)
+                        
+                        let continueAction = UIAlertAction(title: "繼續", style: .default) { _ in
+                            // 繼續執行其他操作
+                            self.fetchOrderForCurrency() // 再次呼叫該方法繼續取得資料
+                        }
+                        alertController.addAction(continueAction)
+                        
+                        let cancelAction = UIAlertAction(title: "取消", style: .cancel) { _ in
+                            // 返回上一頁或執行其他返回操作
+                            DispatchQueue.main.async {
+                                self.emptyView.isHidden = false
+                            }
+                        }
+                        alertController.addAction(cancelAction)
+                        
                         DispatchQueue.main.async {
-                            self.emptyView.isHidden = false
+                            self.present(alertController, animated: true, completion: nil)
+                            self.myHud.dismiss()
                         }
                     }
                 }
