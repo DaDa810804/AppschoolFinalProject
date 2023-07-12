@@ -18,7 +18,6 @@ class ImageTableViewCell: UITableViewCell {
         Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(changeBanner), userInfo: nil, repeats: true)
     }
     func setupICarouselView() {
-        Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(changeBanner), userInfo: nil, repeats: true)
         // 创建页面控制器
         pageControl = UIPageControl()
         pageControl.translatesAutoresizingMaskIntoConstraints = false

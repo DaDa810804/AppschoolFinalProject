@@ -116,7 +116,7 @@ class HistoryViewController: UIViewController {
                         self.historyTableView.mj_header?.endRefreshing()
                     }
                 } else {
-                    let alertController = UIAlertController(title: "無法獲取資料", message: "是否繼續加載？", preferredStyle: .alert)
+                    let alertController = UIAlertController(title: "網路不穩定", message: "是否繼續加載？", preferredStyle: .alert)
                     
                     let continueAction = UIAlertAction(title: "繼續", style: .default) { _ in
                         // 繼續執行其他操作
@@ -137,24 +137,10 @@ class HistoryViewController: UIViewController {
             }
         } else {
             guard let currency = allCurrencyLabel.text else { return }
-            ApiManager.shared.getOrders(productId: "\(currency)-USD") { order in
-                if let order = order {
-                    self.ordersData = order
-                    if self.ordersData.isEmpty == true {
-                        DispatchQueue.main.async {
-                            self.emptyView.isHidden = false
-                            self.historyTableView.mj_header?.endRefreshing()
-                        }
-                    } else {
-                        DispatchQueue.main.async {
-                            self.emptyView.isHidden = true
-                            self.historyTableView.reloadData()
-                            self.historyTableView.mj_header?.endRefreshing()
-                        }
-                    }
-                } else {
-                    print("沒資料")
-                    let alertController = UIAlertController(title: "無法獲取資料", message: "是否繼續加載？", preferredStyle: .alert)
+            ApiManager.shared.getOrders(productId: "\(currency)-USD") { order, error in
+                if let error = error {
+                    //重新打
+                    let alertController = UIAlertController(title: "網路不穩定", message: "是否繼續加載？", preferredStyle: .alert)
                     
                     let continueAction = UIAlertAction(title: "繼續", style: .default) { _ in
                         // 繼續執行其他操作
@@ -174,8 +160,22 @@ class HistoryViewController: UIViewController {
                         self.present(alertController, animated: true, completion: nil)
                     }
                 }
+                if let order = order {
+                    self.ordersData = order
+                    if self.ordersData.isEmpty == true {
+                        DispatchQueue.main.async {
+                            self.emptyView.isHidden = false
+                            self.historyTableView.mj_header?.endRefreshing()
+                        }
+                    } else {
+                        DispatchQueue.main.async {
+                            self.emptyView.isHidden = true
+                            self.historyTableView.reloadData()
+                            self.historyTableView.mj_header?.endRefreshing()
+                        }
+                    }
+                }
             }
-            print("照文字內容帶入getOrders打API\(allCurrencyLabel.text)")
         }
     }
     
@@ -241,23 +241,9 @@ class HistoryViewController: UIViewController {
     func fetchOrderForCurrency() {
         myHud.show(in: view)
         guard let currency = allCurrencyLabel.text else { return }
-        ApiManager.shared.getOrders(productId: "\(currency)-USD") { order in
-            if let order = order {
-                self.ordersData = order
-                if self.ordersData.isEmpty == true {
-                    DispatchQueue.main.async {
-                        self.emptyView.isHidden = false
-                        self.myHud.dismiss()
-                    }
-                } else {
-                    DispatchQueue.main.async {
-                        self.emptyView.isHidden = true
-                        self.historyTableView.reloadData()
-                        self.myHud.dismiss()
-                    }
-                }
-            } else {
-                let alertController = UIAlertController(title: "無法獲取資料", message: "是否繼續加載？", preferredStyle: .alert)
+        ApiManager.shared.getOrders(productId: "\(currency)-USD") { order,error in
+            if let error = error {
+                let alertController = UIAlertController(title: "網路不穩定", message: "是否繼續加載？", preferredStyle: .alert)
                 
                 let continueAction = UIAlertAction(title: "繼續", style: .default) { _ in
                     // 繼續執行其他操作
@@ -275,14 +261,23 @@ class HistoryViewController: UIViewController {
                     self.present(alertController, animated: true, completion: nil)
                     self.myHud.dismiss()
                 }
-//                print("沒資料")
-//                DispatchQueue.main.async {
-//                    self.emptyView.isHidden = false
-//                    self.myHud.dismiss()
-//                }
+            }
+            if let order = order {
+                self.ordersData = order
+                if self.ordersData.isEmpty == true {
+                    DispatchQueue.main.async {
+                        self.emptyView.isHidden = false
+                        self.myHud.dismiss()
+                    }
+                } else {
+                    DispatchQueue.main.async {
+                        self.emptyView.isHidden = true
+                        self.historyTableView.reloadData()
+                        self.myHud.dismiss()
+                    }
+                }
             }
         }
-        print("照文字內容帶入getOrders打API\(allCurrencyLabel.text)")
     }
     
     func fetchOrders() {
@@ -295,7 +290,7 @@ class HistoryViewController: UIViewController {
                     self.myHud.dismiss()
                 }
             } else {
-                let alertController = UIAlertController(title: "無法獲取資料", message: "是否繼續加載？", preferredStyle: .alert)
+                let alertController = UIAlertController(title: "網路不穩定", message: "是否繼續加載？", preferredStyle: .alert)
                 
                 let continueAction = UIAlertAction(title: "繼續", style: .default) { _ in
                     // 繼續執行其他操作
@@ -371,7 +366,7 @@ extension HistoryViewController: HalfViewControllerDelegate {
                         self.myHud.dismiss()
                     }
                 } else {
-                    let alertController = UIAlertController(title: "無法獲取資料", message: "是否繼續加載？", preferredStyle: .alert)
+                    let alertController = UIAlertController(title: "網路不穩定", message: "是否繼續加載？", preferredStyle: .alert)
                     
                     let continueAction = UIAlertAction(title: "繼續", style: .default) { _ in
                         // 繼續執行其他操作
@@ -394,23 +389,11 @@ extension HistoryViewController: HalfViewControllerDelegate {
         } else {
             DispatchQueue.main.async {
                 self.allCurrencyLabel.text = currency
-                ApiManager.shared.getOrders(productId: "\(currency)-USD") { order in
-                    if let order = order {
-                        self.ordersData = order
-                        if self.ordersData.isEmpty == true {
-                            DispatchQueue.main.async {
-                                self.emptyView.isHidden = false
-                            }
-                        } else {
-                            DispatchQueue.main.async {
-                                self.emptyView.isHidden = true
-                                self.myHud.dismiss()
-                                self.historyTableView.reloadData()
-                            }
-                        }
-                    } else {
-                        print("沒資料")
-                        let alertController = UIAlertController(title: "無法獲取資料", message: "是否繼續加載？", preferredStyle: .alert)
+                ApiManager.shared.getOrders(productId: "\(currency)-USD") { order,error in
+                    if let error = error {
+                        print("errorerror\(error)")
+                        //回傳錯誤，表示要重新打一次
+                        let alertController = UIAlertController(title: "網路不穩定", message: "是否繼續加載？", preferredStyle: .alert)
                         
                         let continueAction = UIAlertAction(title: "繼續", style: .default) { _ in
                             // 繼續執行其他操作
@@ -429,6 +412,21 @@ extension HistoryViewController: HalfViewControllerDelegate {
                         DispatchQueue.main.async {
                             self.present(alertController, animated: true, completion: nil)
                             self.myHud.dismiss()
+                        }
+                    }
+                    if let order = order {
+                        self.ordersData = order
+                        if self.ordersData.isEmpty == true {
+                            DispatchQueue.main.async {
+                                self.emptyView.isHidden = false
+                                self.myHud.dismiss()
+                            }
+                        } else {
+                            DispatchQueue.main.async {
+                                self.emptyView.isHidden = true
+                                self.myHud.dismiss()
+                                self.historyTableView.reloadData()
+                            }
                         }
                     }
                 }

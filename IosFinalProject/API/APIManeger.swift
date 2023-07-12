@@ -523,7 +523,7 @@ class ApiManager {
         }
     }
     
-    func getOrders(productId: String, completion: @escaping ([Order]?) -> Void){
+    func getOrders(productId: String, completion: @escaping ([Order]?, Error?) -> Void) {
         let test = "/orders?limit=5&status=done&product_id=\(productId)"
         let productCandlesUrl = "https://api-public.sandbox.pro.coinbase.com\(test)"
         let headers = CoinbaseService.shared.createHeaders(
@@ -533,10 +533,15 @@ class ApiManager {
             switch result {
             case .success(let allOrders):
                 print(allOrders)
-                completion(allOrders)
+                completion(allOrders, nil)
             case .failure(let error):
                 print("Error: \(error)")
-                completion(nil)
+                //如果出現的是decode的錯誤
+                if let error = (error as? DecodingError) {
+                    completion([], nil)
+                } else {
+                    completion(nil, error)
+                }
             }
         }
     }

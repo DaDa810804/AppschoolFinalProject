@@ -51,7 +51,7 @@ class ProductDetailViewController: UIViewController {
             self.realTimeDataHandler?(data)
         }
         
-        ApiManager.shared.getOrders(productId: selectedCurrency!) { orders in
+        ApiManager.shared.getOrders(productId: selectedCurrency!) { orders,error in
             if let orders = orders {
                 self.ordersArray = orders
                 DispatchQueue.main.async {
@@ -108,7 +108,7 @@ class ProductDetailViewController: UIViewController {
     }
     
     func loadData() {
-        ApiManager.shared.getOrders(productId: selectedCurrency!) { orders in
+        ApiManager.shared.getOrders(productId: selectedCurrency!) { orders, error in
             if let orders = orders {
                 self.ordersArray = orders
                 DispatchQueue.main.async {

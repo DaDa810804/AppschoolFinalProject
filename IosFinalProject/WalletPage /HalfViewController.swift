@@ -56,6 +56,9 @@ class HalfViewController: UIViewController {
         if let savedIndexPathRow = UserDefaults.standard.value(forKey: "SelectedCurrencyIndexPath") as? Int {
             selectedIndexPath = IndexPath(row: savedIndexPathRow, section: 0)
         }
+        ApiManager.shared.getProducts { aaaa in
+            print("aaaaa\(aaaa)")
+        }
     }
     
     func setupUI() {

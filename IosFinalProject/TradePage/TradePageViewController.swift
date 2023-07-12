@@ -368,7 +368,7 @@ class TradePageViewController: UIViewController {
         
         let bottomCurrencyLabel = UILabel()
         bottomCurrencyLabel.translatesAutoresizingMaskIntoConstraints = false
-        bottomCurrencyLabel.text = "USD" // 替换为实际的币种名称
+        bottomCurrencyLabel.text = "USDC" // 替换为实际的币种名称
         overlayView.addSubview(bottomCurrencyLabel)
         
         let bottomArrowButton = UIButton(type: .system)
