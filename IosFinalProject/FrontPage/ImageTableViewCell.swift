@@ -13,18 +13,12 @@ class ImageTableViewCell: UITableViewCell {
     var pageControl: UIPageControl!
     var icrview: iCarousel!
     
-    
-    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-        super.init(style: style, reuseIdentifier: reuseIdentifier)
-
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(changeBanner), userInfo: nil, repeats: true)
     }
-    
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
-    
     func setupICarouselView() {
-        
+        Timer.scheduledTimer(timeInterval: 3, target: self, selector: #selector(changeBanner), userInfo: nil, repeats: true)
         // 创建页面控制器
         pageControl = UIPageControl()
         pageControl.translatesAutoresizingMaskIntoConstraints = false
@@ -58,9 +52,6 @@ class ImageTableViewCell: UITableViewCell {
             icrview.bottomAnchor.constraint(equalTo: contentView.bottomAnchor),
             icrview.heightAnchor.constraint(equalToConstant: 200)
         ])
-        
-        
-        Timer.scheduledTimer(timeInterval: 2, target: self, selector: #selector(changeBanner), userInfo: nil, repeats: true)
     }
     
     @objc func changeBanner() {

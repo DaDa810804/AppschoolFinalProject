@@ -20,7 +20,9 @@ class ChartsTableViewCell: UITableViewCell {
     var rightDataArray: [Double] = []
     var dayArray:[Double] = []
     var dataEntries: [ChartDataEntry] = []
-    
+    var cachedChartData: [Double] = []
+    var lastCachedDate: Date?
+
     let myHud = JGProgressHUD()
     
     let stackView = UIStackView()
@@ -36,6 +38,8 @@ class ChartsTableViewCell: UITableViewCell {
     ]
     override func awakeFromNib() {
         super.awakeFromNib()
+        self.selectionStyle = .none
+        //更改點擊狀態
         setupLineChartView()
         setupButtons()
         setupIndicatorView()
@@ -148,21 +152,39 @@ class ChartsTableViewCell: UITableViewCell {
                 }
             }
         } else if index == 5 {
-            DispatchQueue.global().async {
-                ApiManager.shared.fetchAllCandleData(productID: self.selectedCurrency!) { candles, error in
-                    var chartsArray: [Double] = []
-                    var dayArray: [Double] = []
-                    for index in candles! {
-                        dayArray.append(index.time)
-                        chartsArray.append((index.high + index.low) / 2)
-                    }
-                    DispatchQueue.main.async {
-                        self.dayArray = dayArray.reversed()
-                        self.changeChartViewData(dataArray: chartsArray.reversed())
-                        
-                    }
+//            DispatchQueue.global().async {
+//                ApiManager.shared.fetchAllCandleData(productID: self.selectedCurrency!) { candles, error in
+//                    var chartsArray: [Double] = []
+//                    var dayArray: [Double] = []
+//                    for index in candles! {
+//                        dayArray.append(index.time)
+//                        chartsArray.append((index.high + index.low) / 2)
+//                    }
+//                    DispatchQueue.main.async {
+//                        self.dayArray = dayArray.reversed()
+//                        self.changeChartViewData(dataArray: chartsArray.reversed())
+//
+//                    }
+//                }
+//            }
+            // 判斷是否需要重新抓取資料
+            if let lastDate = lastCachedDate, let firstDate = dayArray.first.map({ Date(timeIntervalSince1970: $0) }) {
+                let calendar = Calendar.current
+                let currentDate = calendar.startOfDay(for: Date())
+                let oneDayAgo = calendar.date(byAdding: .day, value: -1, to: currentDate)
+                
+                if let oneDayAgo = oneDayAgo, firstDate > oneDayAgo || lastDate < oneDayAgo {
+                    // 超過一天，重新抓取資料
+                    fetchDataFromAllCandleAPI()
+                } else {
+                    // 不需要重新抓取，使用快取的資料
+                    self.changeChartViewData(dataArray: cachedChartData)
                 }
+            } else {
+                // 沒有快取的資料，重新抓取資料
+                fetchDataFromAllCandleAPI()
             }
+
         } else {
             if let selectedTimeRange = timeRanges[index] {
                 ApiManager.shared.fetchCandleData(productID: selectedCurrency!, timeRange: selectedTimeRange) { candles, error in
@@ -290,7 +312,34 @@ class ChartsTableViewCell: UITableViewCell {
 //            }
 //        }
 //    }
-    
+    func fetchDataFromAllCandleAPI() {
+        DispatchQueue.global().async {
+            ApiManager.shared.fetchAllCandleData(productID: self.selectedCurrency!) { [weak self] candles, error in
+                guard let self = self else { return }
+                
+                if let candles = candles {
+                    var chartsArray: [Double] = []
+                    var dayArray: [Double] = []
+                    for index in candles {
+                        dayArray.append(index.time)
+                        chartsArray.append((index.high + index.low) / 2)
+                    }
+                    
+                    DispatchQueue.main.async {
+                        // 更新快取的資料與時間
+                        self.cachedChartData = chartsArray.reversed()
+                        self.dayArray = dayArray.reversed()
+                        self.lastCachedDate = Date()
+                        
+                        self.changeChartViewData(dataArray: self.cachedChartData)
+                    }
+                } else {
+                    // 處理錯誤...
+                }
+            }
+        }
+    }
+
     func updateIndicatorPosition(for index: Int) {
         guard let selectedButton = stackView.arrangedSubviews[index] as? UIButton else {
             return

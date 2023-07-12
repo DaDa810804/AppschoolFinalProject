@@ -122,32 +122,23 @@ class WalletViewController: UIViewController {
         super.viewWillAppear(animated)
         tabBarController?.tabBar.isHidden = false
         navigationController?.navigationBar.isHidden = true
-//        ApiManager.shared.getAccounts { accounts in
-//            self.userWalletAllCurrency = self.getCurrencies(accounts: accounts)
-//            guard let balance = self.getBalance(accounts: accounts) else { return }
-//            getExchangeRate() { (exchangeRate) in
-//                if let exchangeRate = exchangeRate {
-//                    let twdAmount = (Double(balance) ?? 0.0) * exchangeRate
-//                    DispatchQueue.main.async {
-//                        self.showBalanceLabel.text = "NT$ \(Int(twdAmount))"
-//                        self.inputNumber = Int(twdAmount)
-//                        self.walletTableView.reloadData()
-//                    }
-//                    print("\(balance) USD = \(twdAmount) TWD")
-//                } else {
-//                    print("無法獲取匯率資料")
-//                }
-//            }
-//        }
+
         ApiManager.shared.getAccounts { accounts in
             self.userWalletAllCurrency = self.getCurrencies(accounts: accounts)
             self.getBalance(accounts: accounts) { balance in
                 if let number = Double(balance) {
+                    let formatter = NumberFormatter()
+                    formatter.numberStyle = .decimal
                     let integerValue = Int64(number)
-                    DispatchQueue.main.async {
-                        self.showBalanceLabel.text = "NT$ \(integerValue)"
-                        self.inputNumber = Int(integerValue)
-                        self.walletTableView.reloadData()
+                    if let formattedNumber = formatter.string(from: NSNumber(value: integerValue)) {
+                        print(formattedNumber) // 印出 29,345,127,312.234
+                        DispatchQueue.main.async {
+                            self.showBalanceLabel.text = "NT$ \(formattedNumber)"
+                            self.inputNumber = Int(integerValue)
+                            self.walletTableView.reloadData()
+                        }
+                    } else {
+                        print("Invalid number string")
                     }
                 } else {
                     print("無法將字串轉換為數字")
@@ -298,7 +289,15 @@ class WalletViewController: UIViewController {
     
     @objc func eyesButtonTapped() {
         if showBalanceLabel.text == "NT$ ******" {
-            showBalanceLabel.text = "NT$ \(inputNumber!)"
+            let numberFormatter = NumberFormatter()
+            numberFormatter.numberStyle = .decimal
+
+            if let inputNumber = inputNumber, let formattedNumber = numberFormatter.string(from: NSNumber(value: inputNumber)) {
+                showBalanceLabel.text = "NT$ \(formattedNumber)"
+            } else {
+                showBalanceLabel.text = ""
+            }
+//            moneyLabel.text = "NT$ \(inputNumber!)"
         } else {
             showBalanceLabel.text = "NT$ ******"
         }
@@ -316,12 +315,16 @@ extension WalletViewController: UITableViewDelegate, UITableViewDataSource {
         DispatchQueue.main.async {
             cell?.configure(with: self.userWalletAllCurrency[indexPath.row])
             cell?.currencyLabel.text = self.userWalletAllCurrency[indexPath.row]
-            cell?.quantityLabel.text = String(format: "%.2f", self.balanceArray[indexPath.row])
-            getExchangeRate() { (exchangeRate) in
+            cell?.quantityLabel.text = String(format: "%.8f", self.balanceArray[indexPath.row])
+            getExchangeRateToCurrency(currency: self.userWalletAllCurrency[indexPath.row]) { (exchangeRate) in
+                let numberFormatter = NumberFormatter()
+                numberFormatter.numberStyle = .decimal
                 if let exchangeRate = exchangeRate {
                     let twdAmount = self.balanceArray[indexPath.row] * exchangeRate
-                    DispatchQueue.main.async {
-                        cell?.balanceLabel.text = "\(Int(twdAmount))"
+                    if let formattedAmount = numberFormatter.string(from: NSNumber(value: Int(twdAmount))) {
+                        DispatchQueue.main.async {
+                            cell?.balanceLabel.text = "≈NT$ \(formattedAmount)"
+                        }
                     }
                 } else {
                     print("無法獲取匯率資料")

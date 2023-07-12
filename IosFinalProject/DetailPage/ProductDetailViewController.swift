@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import MJRefresh
 
 class ProductDetailViewController: UIViewController {
     
@@ -18,6 +19,20 @@ class ProductDetailViewController: UIViewController {
     var userWalletAllCurrency: [String] = []
     override func viewDidLoad() {
         super.viewDidLoad()
+        let refreshControl = MJRefreshAutoNormalFooter()
+        refreshControl.setTitle("上拉刷新", for: .idle)
+        refreshControl.setTitle("釋放更新", for: .pulling)
+        refreshControl.setTitle("正在刷新...", for: .refreshing)
+
+        // 設置下拉刷新的回調方法
+        refreshControl.refreshingBlock = { [weak self] in
+            // 在這裡執行下拉刷新時的操作
+            // 例如重新加載數據、獲取最新數據等
+            // 完成後，使用 refreshControl.endRefreshing() 結束刷新
+            self?.loadData()
+        }
+        productDetailTableView.mj_footer = refreshControl
+        
         productDetailTableView.dataSource = self
         productDetailTableView.delegate = self
         let backButton = UIBarButtonItem(image: UIImage(systemName: "chevron.left"), style: .plain, target: self, action: #selector(backButtonTapped))
@@ -28,20 +43,6 @@ class ProductDetailViewController: UIViewController {
         super.viewWillAppear(animated)
         self.navigationController?.setNavigationBarHidden(false, animated: false)
         navigationController?.navigationBar.isHidden = false
-        //拿折線圖資料
-//        if let selectedCurrency = selectedCurrency {
-//            ApiManager.shared.fetchCandleData(productID: selectedCurrency, timeRange: TimeRange.oneDay) { candles,error  in
-//                var chartsArray: [Double] = []
-//                for index in candles! {
-//                    chartsArray.append((index.high + index.low) / 2)
-//                }
-//                DispatchQueue.main.async {
-//                    self.chartsArray = chartsArray
-//                    self.productDetailTableView.reloadData()
-//                }
-//            }
-//        }
-
         //五秒傳值
         let websocketService = WebsocketService.shared
         websocketService.setWebsocket(currency: selectedCurrency!)
@@ -104,6 +105,20 @@ class ProductDetailViewController: UIViewController {
         let indexPath = IndexPath(row: indexPathRow, section: 0)
         UserDefaults.standard.set(indexPath.row, forKey: "SelectedCurrencyIndexPath")
         navigationController?.pushViewController(hVC!, animated: true)
+    }
+    
+    func loadData() {
+        ApiManager.shared.getOrders(productId: selectedCurrency!) { orders in
+            if let orders = orders {
+                self.ordersArray = orders
+                DispatchQueue.main.async {
+                    self.productDetailTableView.reloadData()
+                    self.productDetailTableView.mj_footer?.endRefreshing()
+                }
+            } else {
+                self.productDetailTableView.mj_footer?.endRefreshing()
+            }
+        }
     }
 }
 

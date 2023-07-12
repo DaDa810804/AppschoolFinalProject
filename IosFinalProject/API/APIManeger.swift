@@ -55,9 +55,9 @@ enum TimeRange: String {
     
     var granularity: Int {
         switch self {
-        case .oneDay:
+        case .oneDay, .oneWeek:
             return 3600 // 1小时
-        case .oneWeek, .oneMonth, .threeMonths, .oneYear, .allData:
+        case .oneMonth, .threeMonths, .oneYear, .allData:
             return 86400 // 1天
         }
     }

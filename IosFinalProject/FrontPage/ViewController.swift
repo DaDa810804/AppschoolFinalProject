@@ -94,8 +94,6 @@ class ViewController: UIViewController {
                     } else {
                         print("Invalid number string")
                     }
-                    
-
                 } else {
                     print("無法將字串轉換為數字")
                 }
@@ -120,11 +118,18 @@ class ViewController: UIViewController {
             self.userWalletAllCurrency = self.getCurrencies(accounts: accounts)
             self.getBalance(accounts: accounts) { balance in
                 if let number = Double(balance) {
+                    let formatter = NumberFormatter()
+                    formatter.numberStyle = .decimal
                     let integerValue = Int64(number)
-                    DispatchQueue.main.async {
-                        self.moneyLabel.text = "NT$ \(integerValue)"
-                        self.inputNumber = Int(integerValue)
-                        self.myTableView.mj_header?.endRefreshing()
+                    if let formattedNumber = formatter.string(from: NSNumber(value: integerValue)) {
+                        print(formattedNumber) // 印出 29,345,127,312.234
+                        DispatchQueue.main.async {
+                            self.moneyLabel.text = "NT$ \(formattedNumber)"
+                            self.inputNumber = Int(integerValue)
+                            self.myTableView.mj_header?.endRefreshing()
+                        }
+                    } else {
+                        print("Invalid number string")
                     }
                 } else {
                     print("無法將字串轉換為數字")
@@ -217,18 +222,14 @@ class ViewController: UIViewController {
     
     @objc func eyesButtonTapped() {
         if moneyLabel.text == "NT$ ******" {
-            let numberString = "\(inputNumber)"
+            let numberFormatter = NumberFormatter()
+            numberFormatter.numberStyle = .decimal
 
-            let formatter = NumberFormatter()
-            formatter.numberStyle = .decimal
-
-            if let number = Double(numberString), let formattedNumber = formatter.string(from: NSNumber(value: number)) {
-                moneyLabel.text = "NT$ \(inputNumber!)"
-                print(formattedNumber) // 印出 29,345,127,312.234
+            if let inputNumber = inputNumber, let formattedNumber = numberFormatter.string(from: NSNumber(value: inputNumber)) {
+                moneyLabel.text = "NT$ \(formattedNumber)"
             } else {
-                print("Invalid number string")
+                moneyLabel.text = ""
             }
-
 //            moneyLabel.text = "NT$ \(inputNumber!)"
         } else {
             moneyLabel.text = "NT$ ******"
@@ -263,6 +264,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
                         cell?.leftImageView.image = productInfo?.image
                         cell?.bottomLabel.text = productInfo?.chtName
                         cell?.chartBottomLabel.text = "\(formattedNumber)%"
+                        cell?.updateLabelColor(with: number)
                         let high = (Double(productStat.high)! + Double(productStat.low)!) / 2
                         let highString = truncateDoubleToString(high)
                         getExchangeRate() { (exchangeRate) in

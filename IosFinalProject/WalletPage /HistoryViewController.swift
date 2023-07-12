@@ -368,6 +368,7 @@ extension HistoryViewController: HalfViewControllerDelegate {
                         self.emptyView.isHidden = true
                         self.allCurrencyLabel.text = "全部幣別"
                         self.historyTableView.reloadData()
+                        self.myHud.dismiss()
                     }
                 } else {
                     let alertController = UIAlertController(title: "無法獲取資料", message: "是否繼續加載？", preferredStyle: .alert)

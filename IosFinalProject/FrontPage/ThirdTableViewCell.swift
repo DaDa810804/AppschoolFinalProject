@@ -42,9 +42,7 @@ class ThirdTableViewCell: UITableViewCell {
     let chartView: LineChartView = {
         let view = LineChartView()
         view.translatesAutoresizingMaskIntoConstraints = false
-        
-        // 设置折线图视图的样式、内容等
-        // ...
+        view.isUserInteractionEnabled = false
         return view
     }()
     
@@ -67,6 +65,7 @@ class ThirdTableViewCell: UITableViewCell {
         label.text = "+0.42%"
         // 设置折线图视图下方标签的样式、内容等
         // ...
+
         return label
     }()
     
@@ -167,6 +166,25 @@ class ThirdTableViewCell: UITableViewCell {
         dataSet.colors = [UIColor.myGreen]
         let data = LineChartData (dataSet: dataSet)
         chartView.data = data
+    }
+    
+    func updateLabelColor(with number: Double) {
+        if number > 0 {
+            chartBottomLabel.textColor = .myGreen
+            if let dataSet = chartView.data?.dataSets.first as? LineChartDataSet {
+                dataSet.colors = [.myGreen]
+            }
+        } else if number < 0 {
+            chartBottomLabel.textColor = .myRed
+            if let dataSet = chartView.data?.dataSets.first as? LineChartDataSet {
+                dataSet.colors = [.myRed]
+            }
+        } else {
+            chartBottomLabel.textColor = .gray
+            if let dataSet = chartView.data?.dataSets.first as? LineChartDataSet {
+                dataSet.colors = [.gray]
+            }
+        }
     }
 }
     

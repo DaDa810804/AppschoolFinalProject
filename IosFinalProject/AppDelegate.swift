@@ -18,6 +18,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         IQKeyboardManager.shared.enable = true
         
+        UITableViewCell.appearance().selectionStyle = .none
+        
         if #available(iOS 15.0, *){
             let appearance = UINavigationBarAppearance()
             let fontSize: CGFloat = 18.0
