@@ -130,15 +130,30 @@ class ProfileViewController: UIViewController {
         setupUI()
         navigationItem.leftBarButtonItem = navigationItemleftButton
     }
+    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        ApiManager.shared.getUserProfile { profile in
-            DispatchQueue.main.async {
-                self.uidLabel.text = profile.first?.userId
-                self.nameLabel.text = profile.first?.name
+        if let savedProfileData = UserDefaults.standard.data(forKey: "UserProfile"),
+           let savedProfile = try? JSONDecoder().decode([Profile].self, from: savedProfileData) {
+            // 使用 UserDefaults 中的資料更新畫面
+            self.uidLabel.text = savedProfile.first?.userId
+            self.nameLabel.text = savedProfile.first?.name
+        } else {
+            // 從 API 取得使用者資料
+            ApiManager.shared.getUserProfile { [weak self] profile in
+                DispatchQueue.main.async {
+                    self?.uidLabel.text = profile.first?.userId
+                    self?.nameLabel.text = profile.first?.name
+                    
+                    // 將使用者資料存入 UserDefaults
+                    if let profileData = try? JSONEncoder().encode(profile) {
+                        UserDefaults.standard.set(profileData, forKey: "UserProfile")
+                    }
+                }
             }
         }
     }
+    
     func setupUI() {
         view.addSubview(nameLabel)
         view.addSubview(uidLabel)

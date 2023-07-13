@@ -277,7 +277,7 @@
         <scene sceneID="qdD-sa-WLK">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Z5x-fh-exN" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="錢包" image="menubar.rectangle" catalog="system" id="519-vn-eCR"/>
+                    <tabBarItem key="tabBarItem" title="錢包" image="creditcard" catalog="system" id="519-vn-eCR"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="McN-Xa-vE7">
                         <rect key="frame" x="0.0" y="59" width="393" height="44"/>
@@ -296,7 +296,7 @@
         <scene sceneID="9mW-8v-B1U">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="dUT-dI-z3Y" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="我的" image="ellipsis.message.fill" catalog="system" id="KoA-OD-kxC"/>
+                    <tabBarItem key="tabBarItem" title="我的" image="ellipsis.circle" catalog="system" id="KoA-OD-kxC"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="3IN-wZ-sfa">
                         <rect key="frame" x="0.0" y="59" width="393" height="44"/>
@@ -363,8 +363,8 @@
     </scenes>
     <resources>
         <image name="chart.xyaxis.line" catalog="system" width="128" height="102"/>
-        <image name="ellipsis.message.fill" catalog="system" width="128" height="114"/>
-        <image name="menubar.rectangle" catalog="system" width="128" height="93"/>
+        <image name="creditcard" catalog="system" width="128" height="88"/>
+        <image name="ellipsis.circle" catalog="system" width="128" height="123"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>

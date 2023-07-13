@@ -214,7 +214,7 @@ class SuccessfulTransactionViewController: UIViewController {
         button.setTitleColor(.white, for: .normal)
         button.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20)
         button.setTitle("確認我的資產", for: .normal)
-        button.backgroundColor = .myRed
+        button.backgroundColor = UIColor(red: 113/255, green: 113/255, blue: 113/255, alpha: 1.0)
         button.layer.cornerRadius = 8
         button.layer.borderWidth = 1
         button.layer.borderColor = UIColor.white.cgColor

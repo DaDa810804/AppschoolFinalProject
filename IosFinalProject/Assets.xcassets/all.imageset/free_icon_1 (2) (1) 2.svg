@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="32px" height="32px" viewBox="0 0 32 32" version="1.1">
+<g id="surface1">
+<path style="fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke:rgb(0%,0%,0%);stroke-opacity:1;stroke-miterlimit:10;" d="M 17 6 C 17 4.34375 14.3125 3 11 3 C 7.6875 3 5 4.34375 5 6 C 5 7.65625 7.6875 9 11 9 C 14.3125 9 17 7.65625 17 6 Z M 17 6 "/>
+<path style="fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke:rgb(0%,0%,0%);stroke-opacity:1;stroke-miterlimit:10;" d="M 5 6 L 5 10 C 5 11.699219 7.699219 13 11 13 C 14.300781 13 17 11.699219 17 10 L 17 6 "/>
+<path style="fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke:rgb(0%,0%,0%);stroke-opacity:1;stroke-miterlimit:10;" d="M 5 10 L 5 14 C 5 15.699219 7.699219 17 11 17 C 14.300781 17 17 15.699219 17 14 L 17 10 "/>
+<path style="fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke:rgb(0%,0%,0%);stroke-opacity:1;stroke-miterlimit:10;" d="M 5 14 L 5 18 C 5 19.699219 7.699219 21 11 21 C 14.300781 21 17 19.699219 17 18 L 17 14 "/>
+<path style="fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke:rgb(0%,0%,0%);stroke-opacity:1;stroke-miterlimit:10;" d="M 5 18 L 5 22 C 5 23.699219 7.699219 25 11 25 C 14.300781 25 17 23.699219 17 22 L 17 18 "/>
+<path style="fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke:rgb(0%,0%,0%);stroke-opacity:1;stroke-miterlimit:10;" d="M 5 22 L 5 26 C 5 27.699219 7.699219 29 11 29 C 14.300781 29 17 27.699219 17 26 L 17 22 "/>
+<path style="fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke:rgb(0%,0%,0%);stroke-opacity:1;stroke-miterlimit:10;" d="M 17 22.199219 C 18.101562 22.699219 19.5 23 21 23 C 24.300781 23 27 21.699219 27 20 L 27 16 "/>
+<path style="fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke:rgb(0%,0%,0%);stroke-opacity:1;stroke-miterlimit:10;" d="M 17 13.800781 C 18.101562 13.300781 19.5 13 21 13 C 24.300781 13 27 14.300781 27 16 C 27 17.699219 24.300781 19 21 19 C 19.5 19 18.101562 18.699219 17 18.199219 "/>
+<path style="fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke:rgb(0%,0%,0%);stroke-opacity:1;stroke-miterlimit:10;" d="M 17 26.199219 C 18.101562 26.699219 19.5 27 21 27 C 24.300781 27 27 25.699219 27 24 L 27 20 "/>
+</g>
+</svg>

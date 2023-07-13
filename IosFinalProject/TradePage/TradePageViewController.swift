@@ -76,7 +76,7 @@ class TradePageViewController: UIViewController {
     let topTextField: UITextField = {
         let textField = UITextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.placeholder = "Enter text"
+        textField.placeholder = "Enter"
         textField.font = UIFont.systemFont(ofSize: 20)
         textField.textColor = .gray
         textField.borderStyle = .none
@@ -86,7 +86,7 @@ class TradePageViewController: UIViewController {
     let bottomTextField: UITextField = {
         let textField = UITextField()
         textField.translatesAutoresizingMaskIntoConstraints = false
-        textField.placeholder = "Enter text"
+        textField.placeholder = "Enter"
         textField.font = UIFont.systemFont(ofSize: 20)
         textField.textColor = .gray
         textField.borderStyle = .none
@@ -464,13 +464,13 @@ class TradePageViewController: UIViewController {
             bottomTextField.isUserInteractionEnabled = false
             topTextField.backgroundColor = .white
             bottomTextField.placeholder = ""
-            topTextField.placeholder = "Enter text"
+            topTextField.placeholder = "Enter"
             isTopTextFieldEditable = true
         } else {
             topTextField.isUserInteractionEnabled = false
             bottomTextField.isUserInteractionEnabled = true
             topTextField.placeholder = ""
-            bottomTextField.placeholder = "Enter text"
+            bottomTextField.placeholder = "Enter"
             bottomTextField.backgroundColor = .white
             isTopTextFieldEditable = false
         }
@@ -497,13 +497,23 @@ class TradePageViewController: UIViewController {
                 print("可以買賣")
                 ApiManager.shared.creatOrder(size: "\(number)", side: "buy", productId: selectedCurrency!) {
                     responseOrder in
-                    guard let orderID = responseOrder?.id else { return }
-                    ApiManager.shared.getOrderForId(id: orderID) { order in
-                        stvc?.orderData = order
-                        DispatchQueue.main.async {
-                            self.myHud.dismiss()
-                            self.navigationController?.pushViewController(stvc!, animated: true)
+                    if let orderID = responseOrder?.id {
+                        ApiManager.shared.getOrderForId(id: orderID) { order in
+                            if let order = order {
+                                stvc?.orderData = order
+                                DispatchQueue.main.async {
+                                    self.topTextField.text = ""
+                                    self.myHud.dismiss()
+                                    self.navigationController?.pushViewController(stvc!, animated: true)
+                                }
+                            } else {
+                                showAlert(title: "錯誤", message: "訂單查詢失敗，請至歷史交易頁面查詢")
+                                self.myHud.dismiss()
+                            }
                         }
+                    } else {
+                        showAlert(title: "錯誤", message: "訂單建立失敗")
+                        self.myHud.dismiss()
                     }
                 }
             } else {
@@ -529,13 +539,23 @@ class TradePageViewController: UIViewController {
                 print("可以買賣")
                 ApiManager.shared.creatOrder(size: "\(number)", side: "sell", productId: selectedCurrency!) {
                     responseOrder in
-                    guard let orderID = responseOrder?.id else { return }
-                    ApiManager.shared.getOrderForId(id: orderID) { order in
-                        stvc?.orderData = order
-                        DispatchQueue.main.async {
-                            self.myHud.dismiss()
-                            self.navigationController?.pushViewController(stvc!, animated: true)
+                    if let orderID = responseOrder?.id {
+                        ApiManager.shared.getOrderForId(id: orderID) { order in
+                            if let order = order {
+                                stvc?.orderData = order
+                                DispatchQueue.main.async {
+                                    self.topTextField.text = ""
+                                    self.myHud.dismiss()
+                                    self.navigationController?.pushViewController(stvc!, animated: true)
+                                }
+                            } else {
+                                showAlert(title: "錯誤", message: "訂單查詢失敗，請至歷史交易頁面查詢")
+                                self.myHud.dismiss()
+                            }
                         }
+                    } else {
+                        showAlert(title: "錯誤", message: "訂單建立失敗")
+                        self.myHud.dismiss()
                     }
                 }
             } else {

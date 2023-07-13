@@ -188,6 +188,9 @@ class ChartsTableViewCell: UITableViewCell {
         } else {
             if let selectedTimeRange = timeRanges[index] {
                 ApiManager.shared.fetchCandleData(productID: selectedCurrency!, timeRange: selectedTimeRange) { candles, error in
+                    if let error = error {
+                        
+                    }
                     var chartsArray: [Double] = []
                     var dayArray: [Double] = []
                     if let candles = candles {
@@ -209,109 +212,7 @@ class ChartsTableViewCell: UITableViewCell {
             }
         }
     }
-    
-//    @objc func buttonTapped(_ sender: UIButton) {
-//        let index = sender.tag
-//        updateIndicatorPosition(for: index)
-//        if index == 0 {
-//            ApiManager.shared.fetchCandleData(productID: selectedCurrency!, timeRange: TimeRange.oneDay) {
-//                candles, error in
-//                if candles?.isEmpty == false {
-//                    var dayArray: [Double] = [] ; var chartsArray: [Double] = []
-//                    for index in candles! {
-//                        dayArray.append(index.time)
-//                        chartsArray.append((index.high + index.low) / 2)
-//                    }
-//                    DispatchQueue.main.async {
-//                        self.dayArray = dayArray.reversed()
-//                        self.changeChartViewData(dataArray: chartsArray.reversed())
-//                    }
-//                } else {
-//                    DispatchQueue.main.async {
-//                        self.changeChartViewData(dataArray: [0,0])
-//                    }
-//                }
-//            }
-//        } else if index == 1 {
-//            ApiManager.shared.fetchCandleData(productID: selectedCurrency!, timeRange: TimeRange.oneWeek) {
-//                candles, error in
-//                var chartsArray: [Double] = []
-//                var dayArray: [Double] = []
-//                for index in candles! {
-//                    dayArray.append(index.time)
-//                    chartsArray.append((index.high + index.low) / 2)
-//                }
-//                DispatchQueue.main.async {
-//                    self.dayArray = dayArray.reversed()
-//                    self.changeChartViewData(dataArray: chartsArray.reversed())
-//                }
-//            }
-//        } else if index == 2 {
-//            ApiManager.shared.fetchCandleData(productID: selectedCurrency!, timeRange: TimeRange.oneMonth) {
-//                candles, error in
-//                var chartsArray: [Double] = []
-//                var dayArray: [Double] = []
-//                for index in candles! {
-//                    dayArray.append(index.time)
-//                    chartsArray.append((index.high + index.low) / 2)
-//                }
-//                DispatchQueue.main.async {
-//                    self.dayArray = dayArray.reversed()
-//                    self.changeChartViewData(dataArray: chartsArray.reversed())
-//                }
-//            }
-//        } else if index == 3 {
-//            ApiManager.shared.fetchCandleData(productID: selectedCurrency!, timeRange: TimeRange.threeMonths) {
-//                candles, error in
-//                var chartsArray: [Double] = []
-//                var dayArray: [Double] = []
-//                for index in candles! {
-//                    dayArray.append(index.time)
-//                    chartsArray.append((index.high + index.low) / 2)
-//                }
-//                DispatchQueue.main.async {
-//                    self.dayArray = dayArray.reversed()
-//                    self.changeChartViewData(dataArray: chartsArray.reversed())
-//                }
-//            }
-//        } else if index == 4 {
-//            ApiManager.shared.fetchCandleYearData(productID: selectedCurrency!, timeRange: TimeRange.oneYear) {
-//                candles, error in
-//                var chartsArray: [Double] = []
-//                var dayArray: [Double] = []
-//                for index in candles! {
-//                    dayArray.append(index.time)
-//                    chartsArray.append((index.high + index.low) / 2)
-//                }
-//                DispatchQueue.main.async {
-//                    self.dayArray = dayArray
-//                    self.changeChartViewData(dataArray: chartsArray)
-//                }
-//            }
-//        } else if index == 5 {
-//            ApiManager.shared.fetchAllCandleData(productID: selectedCurrency!) { candles, error in
-//                var chartsArray: [Double] = []
-//                var dayArray: [Double] = []
-//                for index in candles! {
-//                    dayArray.append(index.time)
-//                    chartsArray.append((index.high + index.low) / 2)
-//                }
-//                DispatchQueue.main.async {
-//                    self.dayArray = dayArray.reversed()
-//                    self.changeChartViewData(dataArray: chartsArray.reversed())
-//                }
-//            }
-//        }
-//        for (buttonIndex, button) in stackView.arrangedSubviews.enumerated() {
-//            if let button = button as? UIButton {
-//                if buttonIndex == index {
-//                    button.setTitleColor(.red, for: .normal) // 点击状态下字体为红色
-//                } else {
-//                    button.setTitleColor(.gray, for: .normal) // 非点击状态下字体为灰色
-//                }
-//            }
-//        }
-//    }
+
     func fetchDataFromAllCandleAPI() {
         DispatchQueue.global().async {
             ApiManager.shared.fetchAllCandleData(productID: self.selectedCurrency!) { [weak self] candles, error in
